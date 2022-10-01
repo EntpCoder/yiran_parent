@@ -33,7 +33,7 @@
     <dependencies>
         <dependency>
             <groupId>com.yiran</groupId>
-            <artifactId>common</artifactId>
+            <artifactId>common_util</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
