@@ -1,0 +1,10 @@
+server:
+  port: 8888
+spring:
+  application:
+    name: service-pay
+  cloud:
+    nacos:
+      server-addr: 43.143.139.24:8848
+      username: nacos
+      password: songyang.top@@##$$
