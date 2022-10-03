@@ -1,17 +1,16 @@
 package com.yiran.order.service;
 
-import com.yiran.model.entity.Order;
-
-import java.util.List;
+import com.yiran.model.entity.Orders;
+import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
+ * <p>
+ *  服务类
+ * </p>
+ *
  * @author Yang Song
- * @date 2022/10/2 22:58
+ * @since 2022-10-03
  */
-public interface IOrdersService {
-    /**
-     * 返回所有订单
-     * @return 所有订单
-     */
-    List<Order> getAllOrders();
+public interface IOrdersService extends IService<Orders> {
+
 }
