@@ -56,9 +56,9 @@ public class ReceiveCoupon implements Serializable {
     private LocalDateTime expirationTime;
 
     /**
-     * 状态
+     * 使用状态
      */
-    private Byte condition;
+    private Boolean isUsed;
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Boolean isDelete;

@@ -63,18 +63,12 @@ public class Flow implements Serializable {
      */
     private Boolean status;
 
-    /**
-     * 是否删除
-     */
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Boolean isDelete;
 
     private Integer version;
 
-    /**
-     * 流水创建时间
-     */
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)

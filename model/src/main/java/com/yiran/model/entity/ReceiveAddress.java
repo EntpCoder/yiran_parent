@@ -43,7 +43,7 @@ public class ReceiveAddress implements Serializable {
     /**
      * 可收货时间,0：周一至周日均可收获 1：周一至周五可收货 2：周六日、节假日可收货
      */
-    private Boolean time;
+    private Byte time;
 
     /**
      * 省份
@@ -73,7 +73,7 @@ public class ReceiveAddress implements Serializable {
     /**
      * 地址类型 0：家庭 1：公司 2：其他
      */
-    private Boolean type;
+    private Byte type;
 
     /**
      * 用户id
