@@ -97,4 +97,5 @@ public class Product implements Serializable {
     private String other1;
 
     private String other2;
+    private Size size;
 }
