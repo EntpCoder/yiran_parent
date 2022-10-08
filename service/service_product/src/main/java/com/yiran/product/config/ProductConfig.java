@@ -1,5 +1,6 @@
 package com.yiran.product.config;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = "com.yiran")
+@MapperScan("com.yiran.product.mapper")
 @EnableFeignClients(basePackages = "com.yiran.client")
 public class ProductConfig {
 }

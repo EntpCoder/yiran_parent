@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiran.product.mapper.ProductMapper">
+
+    <sql id="base_column">
+        pro_id,pro_num,pro_name,kind,pro_main_image_address,selling_price,pro_price,discount,brand_id,`describe`,degree_of_satisfaction,is_delete,version,create_time,update_time,other1,other2
+    </sql>
+    <resultMap id="product" type="com.yiran.model.entity.Product">
+        <id column="pro_id" property="proId"></id>
+        <result column="pro_num" property="proNum"></result>
+        <result column="pro_name" property="proName"></result>
+        <result column="kind" property="kind"></result>
+        <result column="pro_main_image_address" property="proMainImageAddress"></result>
+        <result column="selling_price" property="sellingPrice"></result>
+        <result column="pro_price" property="proPrice"></result>
+        <result column="discount" property="discount"></result>
+        <result column="brand_id" property="brandId"></result>
+        <result column="describe" property="describe"></result>
+        <result column="degree_of_satisfaction" property="degreeOfSatisfaction"></result>
+        <result column="is_delete" property="isDelete"></result>
+        <result column="version" property="version"></result>
+        <result column="create_time" property="createTime"></result>
+        <result column="update_time" property="updateTime"></result>
+        <result column="other1" property="other1"></result>
+        <result column="other2" property="other2"></result>
+
+    </resultMap>
+
+    <select id="getByBrandId" resultMap="product">
+        select <include refid="base_column"/>
+                from product where brand_id = #{brandId} and is_delete = 0;
+    </select>
+
+
+
+
+</mapper>

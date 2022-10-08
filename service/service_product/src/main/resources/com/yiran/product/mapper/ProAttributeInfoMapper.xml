@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiran.product.mapper.ProAttributeInfoMapper">
+
+    <resultMap id="aa" type="com.yiran.model.entity.ProAttributeInfo">
+        <id column="pro_attribute_info_id" property="proAttributeInfoId"></id>
+        <result column="pro_id" property="proId"></result>
+        <result column="size_id" property="sizeId"></result>
+        <result column="color_id" property="colorId"></result>
+        <association property="product" javaType="com.yiran.model.entity.Product">
+            <id column="pro_id" property="proId"></id>
+            <result column="pro_num" property="proNum"></result>
+            <result column="pro_name" property="proName"></result>
+            <result column="kind" property="kind"></result>
+            <result column="pro_main_image_address" property="proMainImageAddress"></result>
+            <result column="selling_price" property="sellingPrice"></result>
+            <result column="pro_price" property="proPrice"></result>
+            <result column="discount" property="discount"></result>
+            <result column="brand_id" property="brandId"></result>
+            <result column="describe" property="describe"></result>
+            <result column="degree_of_satisfaction" property="degreeOfSatisfaction"></result>
+            <result column="is_delete" property="isDelete"></result>
+            <result column="version" property="version"></result>
+            <result column="create_time" property="createTime"></result>
+            <result column="update_time" property="updateTime"></result>
+            <result column="other1" property="other1"></result>
+            <result column="other2" property="other2"></result>
+        </association>
+    </resultMap>
+    <select id="getByBrandKindSizeColor" resultMap="aa">
+        select p.*,pattr.*
+        from product p
+        join pro_attribute_info pattr
+        on pattr.pro_id = p.pro_id
+        <where>
+            <if test="brandId != null">
+                 brand_id = #{brandId}
+            </if>
+            <if test="kind != null">
+                and kind = #{kind}
+            </if>
+            <if test="sizeId != null">
+                and size_id = #{sizeId}
+            </if>
+            <if test="colorId != null">
+                and color_id = #{colorId}
+            </if>
+        </where>
+    </select>
+</mapper>

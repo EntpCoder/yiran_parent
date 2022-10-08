@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -76,6 +77,7 @@ public class Product implements Serializable {
     /**
      * 商品描述
      */
+    @TableField("`describe`")
     private String describe;
 
     /**
@@ -97,5 +99,4 @@ public class Product implements Serializable {
     private String other1;
 
     private String other2;
-    private Size size;
 }

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -59,4 +58,6 @@ public class ProAttributeInfo implements Serializable {
     private String other1;
 
     private String other2;
+
+    private Product product;
 }
