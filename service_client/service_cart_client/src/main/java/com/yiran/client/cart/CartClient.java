@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 @FeignClient(name = "service-cart")
 @Component
 public interface CartClient {
+    /**
+     * 测试远程调用
+     * @return 统一结果集
+     */
     @GetMapping("/cart/test")
-    public R<String> testCart();
+    R<String> testCart();
 }
