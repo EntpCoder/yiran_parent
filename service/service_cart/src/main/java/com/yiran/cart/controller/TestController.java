@@ -26,4 +26,9 @@ public class TestController {
         List<CartVO> cartList = cartService.getUserCart(userId);
         return cartList == null ? R.fail() : R.ok("cartList",cartList);
     }
+    @GetMapping("/test")
+    public R<String> testCart(){
+        return R.ok("test","cart 服务的数据");
+    }
+
 }
