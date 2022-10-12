@@ -1,6 +1,6 @@
 package com.yiran.cart.mapper;
 
-import com.yiran.model.entity.Cart;
+import com.yiran.model.entity.Color;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,5 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-10-03
  */
 @Mapper
-public interface CartMapper extends BaseMapper<Cart> {
+public interface ColorMapper extends BaseMapper<Color> {
+
 }

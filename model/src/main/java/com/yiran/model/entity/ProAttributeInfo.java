@@ -58,6 +58,4 @@ public class ProAttributeInfo implements Serializable {
     private String other1;
 
     private String other2;
-
-    private Product product;
 }

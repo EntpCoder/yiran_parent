@@ -1,7 +1,7 @@
 server:
   port: 8082
   servlet:
-    context-path: /carts
+    context-path:
 spring:
   application:
     name: service-cart
