@@ -17,13 +17,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/cart")
 public class TestController {
-    private final ICartService CartService;
+    private final ICartService cartService;
     public TestController(ICartService cartService){
-        this.CartService = cartService;
+        this.cartService = cartService;
     }
     @GetMapping("/userCart/{userId}")
     public R<List<CartVO>> userCart(@PathVariable("userId") String userId){
-        List<CartVO> cartList =CartService.getUserCart(userId);
+        List<CartVO> cartList = cartService.getUserCart(userId);
         return cartList == null ? R.fail() : R.ok("cartList",cartList);
     }
 }
