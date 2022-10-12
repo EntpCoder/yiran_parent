@@ -25,8 +25,8 @@ public class TestController {
 
     /**
      * 根据id查询商品
-     * @param id
-     * @return
+     * @param id 商品id
+     * @return 商品实体
      */
     @GetMapping("getById/{id}")
     public R<Product> getById(@PathVariable("id") String id){
