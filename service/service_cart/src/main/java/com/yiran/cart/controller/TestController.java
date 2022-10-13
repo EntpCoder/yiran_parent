@@ -28,7 +28,8 @@ public class TestController {
     }
     @GetMapping("/test")
     public R<String> testCart(){
-        return R.ok("test","cart 服务的数据");
+        System.out.println("testCart");
+        return R.ok("test","cart333 服务的数据");
     }
 
 }

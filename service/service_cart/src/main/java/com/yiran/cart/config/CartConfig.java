@@ -10,6 +10,5 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = "com.yiran")
-@EnableFeignClients(basePackages = "com.yiran.cart")
 public class CartConfig {
 }
