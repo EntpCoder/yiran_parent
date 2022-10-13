@@ -16,11 +16,4 @@ import java.util.List;
  */
 @Mapper
 public interface ProductMapper extends BaseMapper<Product> {
-     /**
-      *根据品牌id查询商品
-      * @param BrandId 品牌id
-      * @return 商品集合
-      */
-     List<Product> getByBrandId(String BrandId);
-
 }

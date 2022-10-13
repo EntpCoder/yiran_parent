@@ -3,32 +3,22 @@
 <mapper namespace="com.yiran.product.mapper.ProAttributeInfoMapper">
 
     <resultMap id="aa" type="com.yiran.model.entity.ProAttributeInfo">
-        <id column="pro_attribute_info_id" property="proAttributeInfoId"></id>
-        <result column="pro_id" property="proId"></result>
-        <result column="size_id" property="sizeId"></result>
-        <result column="color_id" property="colorId"></result>
-        <association property="product" javaType="com.yiran.model.entity.Product">
-            <id column="pro_id" property="proId"></id>
-            <result column="pro_num" property="proNum"></result>
-            <result column="pro_name" property="proName"></result>
-            <result column="kind" property="kind"></result>
-            <result column="pro_main_image_address" property="proMainImageAddress"></result>
-            <result column="selling_price" property="sellingPrice"></result>
-            <result column="pro_price" property="proPrice"></result>
-            <result column="discount" property="discount"></result>
-            <result column="brand_id" property="brandId"></result>
-            <result column="describe" property="describe"></result>
-            <result column="degree_of_satisfaction" property="degreeOfSatisfaction"></result>
-            <result column="is_delete" property="isDelete"></result>
-            <result column="version" property="version"></result>
-            <result column="create_time" property="createTime"></result>
-            <result column="update_time" property="updateTime"></result>
-            <result column="other1" property="other1"></result>
-            <result column="other2" property="other2"></result>
+        <id column="pro_attribute_info_id" property="proAttributeInfoId"/>
+
+        <result column="size_id" property="sizeId"/>
+        <result column="color_id" property="colorId"/>
+        <association property="product" javaType="com.yiran.model.entity.Product" column="pro_id">
+            <id column="pro_id" property="proId"/>
+            <result column="kind" property="kind"/>
+            <result column="pro_main_image_address" property="proMainImageAddress"/>
+            <result column="selling_price" property="sellingPrice"/>
+            <result column="pro_price" property="proPrice"/>
+            <result column="discount" property="discount"/>
+            <result column="brand_id" property="brandId"/>
         </association>
     </resultMap>
     <select id="getByBrandKindSizeColor" resultMap="aa">
-        select p.*,pattr.*
+        select p.kind,p.pro_main_image_address,p.selling_price,p.discount,p.brand_id,pattr.pro_attribute_info_id,pattr.size_id,pattr.color_id
         from product p
         join pro_attribute_info pattr
         on pattr.pro_id = p.pro_id
