@@ -17,6 +17,10 @@ public enum ResultCodeEnum {
      * 失败
      */
     FAIL(201, "失败"),
+    /**
+     * 数据为空
+     */
+    DATA_EMPTY(202,"数据为空")
     ;
 
     /**

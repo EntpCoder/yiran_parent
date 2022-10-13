@@ -2,6 +2,7 @@ package com.yiran.cart.controller;
 
 import com.yiran.cart.service.ICartService;
 import com.yiran.common.result.R;
+import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.vo.CartVO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +25,7 @@ public class TestController {
     @GetMapping("/userCart/{userId}")
     public R<List<CartVO>> userCart(@PathVariable("userId") String userId){
         List<CartVO> cartList = cartService.getUserCart(userId);
-        return cartList == null ? R.fail() : R.ok("cartList",cartList);
+        return cartList.isEmpty() ? R.fail(ResultCodeEnum.DATA_EMPTY) : R.ok("cartList",cartList);
     }
     @GetMapping("/test")
     public R<String> testCart(){

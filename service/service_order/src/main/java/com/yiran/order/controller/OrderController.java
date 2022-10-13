@@ -33,4 +33,12 @@ public class OrderController {
     public R<String> test(){
         return R.ok("1",cartClient.testCart().getData().get("test"));
     }
+    @GetMapping("/testA")
+    public R<String> testA(){
+        return R.ok("A","aaaa");
+    }
+    @GetMapping("/testB")
+    public R<String> testB(){
+        return R.ok("B","bbbbb");
+    }
 }
