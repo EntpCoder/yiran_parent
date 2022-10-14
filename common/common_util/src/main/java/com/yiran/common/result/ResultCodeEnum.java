@@ -20,7 +20,11 @@ public enum ResultCodeEnum {
     /**
      * 数据为空
      */
-    DATA_EMPTY(202,"数据为空")
+    DATA_EMPTY(202,"数据为空"),
+    /**
+     * 热数据兜底数据
+     */
+    SO_HOT(203,"当前数据访问量过多,请稍后再试")
     ;
 
     /**

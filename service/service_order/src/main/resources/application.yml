@@ -10,7 +10,7 @@ spring:
       password: songyang.top@@##$$
     sentinel:
       transport:
-        dashboard: localhost:8080
+        dashboard: localhost:8000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://43.143.139.24:3306/yiran
@@ -19,3 +19,6 @@ spring:
 mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+feign:
+  sentinel:
+    enabled: true
