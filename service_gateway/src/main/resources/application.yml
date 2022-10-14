@@ -13,7 +13,7 @@ spring:
         locator:
           enabled: true #开启注册中心路由功能
       routes:
-        - id: 1
+        - id: service-order
           uri: lb://service-order
           predicates:
             - Path=/order/**
