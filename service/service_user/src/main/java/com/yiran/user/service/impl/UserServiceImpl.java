@@ -1,17 +1,67 @@
 package com.yiran.user.service.impl;
 
 import com.yiran.model.entity.User;
+import com.yiran.user.mapper.UserMapper;
 import com.yiran.user.service.IUserService;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 /**
- * 测试是否能运行
- * @author  11
+ * 方法类
+ * @author  weiyuwen
  */
+@Service
 public class UserServiceImpl implements IUserService {
+    private final UserMapper userMapper;
+
+    /**
+     * 构造器注入，不用@Autoweir
+     * @param userMapper Users类的方法
+     */
+    public UserServiceImpl(UserMapper userMapper){
+        this.userMapper=userMapper;
+    }
+
+    /**
+     * 新增用户，用于用户注册
+     * @param user 用户实例
+     * @return 新增信息数量是否大于1
+     */
     @Override
-    public List<User> selectUser(String userId) {
-        return null;
+    public boolean redister(User user) {
+        user=new User();
+        user.setUserId("103");
+        user.setOpenId("33333");
+        user.setPhone("13526152523");
+        user.setPassword("123aaa");
+        user.setUsername("cindy");
+        user.setGender(false);
+        user.setIsDelete(false);
+        int row=userMapper.insert(user);
+        return row>0;
+    }
+
+    @Override
+    public boolean delete(String userId) {
+        int row=userMapper.deleteById(userId);
+        return row>0;
+    }
+
+    @Override
+    public boolean update(String userId) {
+        User user=userMapper.selectById(userId);
+        user.setUsername("Elina");
+        user.setPassword("3652eee");
+        int row=userMapper.updateById(user);
+        return row>0;
+    }
+
+    /**
+     * 按照id查找用户
+     * @return Users
+     */
+    @Override
+    public User selectUser() {
+        return userMapper.selectById(101);
     }
 }

@@ -1,26 +1,49 @@
 package com.yiran.user.controller;
 
 import com.yiran.common.result.R;
+import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.User;
 import com.yiran.user.service.IUserService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.websocket.server.PathParam;
+
 
 /**
- * @author 11
- * 测试类
+ * @author weiyuwen
+ * 实现
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/users")
 public class TestUserController {
-    private  IUserService iUserService;
-    @GetMapping("/user/{userId}")
-    public R<List<User>> selectUser(@PathVariable("userId") String userId){
-        List<User> list=iUserService.selectUser(userId);
-        return list==null?R.fail():R.ok("userList",list);
+    private final IUserService userService;
+
+    /**
+     * 使用构造器注入
+     * @param userService 服务类的方法
+     */
+    public TestUserController(IUserService userService) {
+        this.userService = userService;
+    }
+
+
+    @PostMapping("/redister")
+    public R<Boolean> redister(User user){
+        return userService.redister(user)? R.ok("redister",true):R.fail(ResultCodeEnum.FAIL);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public R<Boolean> delete(@PathVariable("userId") String userId){
+        return userService.delete(userId)?R.ok("delete",true):R.fail(ResultCodeEnum.FAIL);
+    }
+
+    @PutMapping("/update/{userId}")
+    public R<Boolean> update(@PathVariable("userId") String userId){
+        return userService.update(userId)?R.ok("update",true):R.fail(ResultCodeEnum.FAIL);
+    }
+
+    @GetMapping("/user")
+    public User getUser(){
+        return userService.selectUser();
     }
 }
