@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2022/10/12 18:23
  */
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/cart/test")
 public class TestController {
     private final ICartService cartService;
     public TestController(ICartService cartService){
@@ -29,6 +29,11 @@ public class TestController {
     }
     @GetMapping("/test")
     public R<String> testCart(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("testCart");
         return R.ok("test","cart333 服务的数据");
     }
