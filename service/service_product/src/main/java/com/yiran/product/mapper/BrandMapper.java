@@ -1,11 +1,8 @@
 package com.yiran.product.mapper;
 
-import com.yiran.model.entity.ProAttributeInfo;
+import com.yiran.model.entity.Brand;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.yiran.model.entity.Product;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 /**
  * <p>
@@ -16,5 +13,6 @@ import java.util.List;
  * @since 2022-10-03
  */
 @Mapper
-public interface ProAttributeInfoMapper extends BaseMapper<ProAttributeInfo> {
+public interface BrandMapper extends BaseMapper<Brand> {
+
 }

@@ -1,8 +1,5 @@
 package com.yiran.product.service;
 
-import com.yiran.model.entity.ProAttributeInfo;
-import com.yiran.model.entity.Product;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.yiran.model.vo.ProductVO;
 
 import java.util.List;
@@ -15,7 +12,7 @@ import java.util.List;
  * @author Yang Song
  * @since 2022-10-03
  */
-public interface IProductService extends IService<Product> {
+public interface IProductService{
     /**
      * 根据品牌id查询商品
      * @param brandId 品牌id
@@ -24,14 +21,14 @@ public interface IProductService extends IService<Product> {
     List<ProductVO> getByBrandId(String brandId);
 
     /**
-     * 多条件筛选查询
+     * 多条件筛选
      * @param brandId 品牌id
-     * @param kind 品类id
-     * @param sizeId 尺码id
-     * @param colorId 颜色id
-     * @return 商品集合
+     * @param kindIdArr 品类id数组
+     * @param sizeIdArr 尺码id数组
+     * @param colorIdArr 颜色id数组
+     * @return 符合筛选条件的商品
      */
-    List<ProAttributeInfo> getByBrandKindSizeColor(String brandId, String kind, String sizeId, String colorId);
+    List<ProductVO> getByBrandKindSizeColor(String brandId, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr);
 
 
 }
