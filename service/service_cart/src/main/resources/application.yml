@@ -10,6 +10,9 @@ spring:
       server-addr: 43.143.139.24:8848
       username: nacos
       password: songyang.top@@##$$
+    sentinel:
+      transport:
+        dashboard: localhost:8000
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://43.143.139.24:3306/yiran

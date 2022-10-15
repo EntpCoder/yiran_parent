@@ -6,7 +6,6 @@ import com.yiran.common.result.R;
 import com.yiran.model.entity.Orders;
 import com.yiran.order.service.IOrdersService;
 import com.yiran.serviceutil.BlockHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,11 +21,13 @@ import java.util.List;
 @RequestMapping("/order")
 public class TestOrderController {
     private final IOrdersService ordersService;
-    @Autowired
-    private CartClient cartClient;
-    public TestOrderController(IOrdersService iOrdersService){
-        this.ordersService = iOrdersService;
+    private final CartClient cartClient;
+
+    public TestOrderController(IOrdersService ordersService, CartClient cartClient) {
+        this.ordersService = ordersService;
+        this.cartClient = cartClient;
     }
+
     @GetMapping("/getAllOrders")
     public R<List<Orders>> getAll(){
         List<Orders> allOrders = ordersService.list();
