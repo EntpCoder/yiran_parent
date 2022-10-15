@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2022/10/12 18:23
  */
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/cart/test")
 public class TestController {
     private final ICartService cartService;
     public TestController(ICartService cartService){
