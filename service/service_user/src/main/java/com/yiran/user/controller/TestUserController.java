@@ -1,7 +1,7 @@
 package com.yiran.user.controller;
 
 import com.yiran.common.result.R;
-import com.yiran.model.entity.Users;
+import com.yiran.model.entity.User;
 import com.yiran.user.service.IUserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,8 +19,8 @@ import java.util.List;
 public class TestUserController {
     private  IUserService iUserService;
     @GetMapping("/user/{userId}")
-    public R<List<Users>> selectUser(@PathVariable("userId") String userId){
-        List<Users> list=iUserService.selectUser(userId);
+    public R<List<User>> selectUser(@PathVariable("userId") String userId){
+        List<User> list=iUserService.selectUser(userId);
         return list==null?R.fail():R.ok("userList",list);
     }
 }
