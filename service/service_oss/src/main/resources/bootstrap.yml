@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: service-oss
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      config:
+        server-addr: 43.143.139.24:8848
+        username: nacos
+        password: songyang.top@@##$$
+        file-extension: yml
+        group: DEV_GROUP
+        shared-configs:
+          - data-id: cloud.yml
+            group: COMMON_GROUP
