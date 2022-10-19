@@ -69,6 +69,10 @@ public class User implements Serializable {
      * 用户生日
      */
     private LocalDateTime birthday;
+    /**
+     * 用户默认收货地址id
+     */
+    private String defaultAddressId;
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Boolean isDelete;
