@@ -4,16 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.cart.mapper.*;
 import com.yiran.cart.service.ICartService;
 
-import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.*;
 import com.yiran.model.vo.CartVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -95,6 +92,7 @@ public class CartServiceImpl  implements ICartService {
      * @param cartId 购物车id
      * @return 对象
      */
+    @Override
     public boolean deleteCartByIds(String[] cartId){
         return cartMapper.deleteBatchIds(Arrays.asList(cartId)) > 0;
     }
