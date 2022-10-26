@@ -31,6 +31,6 @@ public interface IUserService extends IService<User> {
      *  查找用户
      * @return Users
      */
-    User selectUser();
+    User selectUser(String userId);
 
 }

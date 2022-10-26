@@ -6,6 +6,7 @@ import com.yiran.model.entity.User;
 import com.yiran.user.service.IUserService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 
 
 /**
@@ -42,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public User getUser(){
-        return userService.selectUser();
+    public User getUser(@PathParam("userId") String userId){
+        return userService.selectUser(userId);
     }
 }

@@ -25,4 +25,12 @@ public class ReceiveAddressServiceImpl extends ServiceImpl<ReceiveAddressMapper,
     public ReceiveAddress selectUserAddress(String id) {
         return receiveAddressMapper.selectById(id);
     }
+
+    @Override
+    public Boolean insertAddressByUser(String userId) {
+        ReceiveAddress receiveAddress=new ReceiveAddress();
+        receiveAddress.setReceiveId("1003");
+        receiveAddress.setName("");
+        return null;
+    }
 }

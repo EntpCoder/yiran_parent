@@ -62,7 +62,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
      * @return Users
      */
     @Override
-    public User selectUser() {
-        return userMapper.selectById(101);
+    public User selectUser(String userId) {
+        return userMapper.selectById(userId);
     }
 }
