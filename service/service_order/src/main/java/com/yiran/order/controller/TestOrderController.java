@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -33,40 +34,53 @@ public class TestOrderController {
     }
 
     @GetMapping("/getAllOrders")
-    public R<List<Orders>> getAll(){
+    public R<List<Orders>> getAll() {
         List<Orders> allOrders = ordersService.list();
         System.out.println("获取所有订单");
-        return allOrders == null ? R.fail():R.ok("myOrders",allOrders);
+        return allOrders == null ? R.fail() : R.ok("myOrders", allOrders);
     }
+
     @GetMapping("/testOpenFein")
-    public R<String> test(){
-        return R.ok("1",cartClient.testCart().getData().get("test"));
+    public R<String> test() {
+        return R.ok("1", cartClient.testCart().getData().get("test"));
     }
+
     @GetMapping("/testA")
-    public R<String> testA(){
-        System.out.println(config.getName()+"=====================");
-        return R.ok("A","aaaa");
+    public R<String> testA() {
+        System.out.println(config.getName() + "=====================");
+        return R.ok("A", "aaaa");
     }
+
     @GetMapping("/testB")
-    public R<String> testB(){
-        return R.ok("B","bbbbb");
+    public R<String> testB() {
+        return R.ok("B", "bbbbb");
     }
+
     @GetMapping("/testBlow")
-    public R<String> testBlow(){
+    public R<String> testBlow() {
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return R.ok("testBlow","testBlowtestBlow");
+        return R.ok("testBlow", "testBlowtestBlow");
     }
+
     @GetMapping("/testHot/{userId}/{proId}")
     @SentinelResource(value = "testHot",
-                        blockHandlerClass = BlockHandler.class,
-                        blockHandler = "soHot")
+            blockHandlerClass = BlockHandler.class,
+            blockHandler = "soHot")
     public R<String> testHot(@PathVariable("userId") String userId,
-                             @PathVariable("proId") String proId){
-        System.out.println(userId+":"+proId);
-        return R.ok("testHot","假装我是热点数据");
+                             @PathVariable("proId") String proId) {
+        System.out.println(userId + ":" + proId);
+        return R.ok("testHot", "假装我是热点数据");
+    }
+
+    @GetMapping("testR")
+    public R<Object> testR() {
+        return R.build()
+                .data("key1", "字符串数据")
+                .data("key2", 567)
+                .data("key3",new int[]{1,2,3});
     }
 }

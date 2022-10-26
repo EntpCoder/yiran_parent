@@ -47,6 +47,19 @@ public class R<T> {
         }
         return result;
     }
+    public static R<Object> build(){
+        R<Object> result = new R<>();
+        ResultCodeEnum resultCodeEnum = ResultCodeEnum.SUCCESS;
+        result.setCode(resultCodeEnum.getCode());
+        result.setMessage(resultCodeEnum.getMessage());
+        return result;
+    }
+    public R<T> data(String key,T  value){
+        if (value != null){
+            this.data.put(key, value);
+        }
+        return this;
+    }
     public R<T> message(String msg){
         this.setMessage(msg);
         return this;
