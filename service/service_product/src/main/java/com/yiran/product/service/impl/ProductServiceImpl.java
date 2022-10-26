@@ -2,6 +2,7 @@ package com.yiran.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.*;
+import com.yiran.model.entity.Collections;
 import com.yiran.model.vo.ProductDetailVO;
 import com.yiran.model.vo.ProductVO;
 import com.yiran.product.mapper.*;
@@ -10,9 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -32,9 +31,10 @@ public class ProductServiceImpl implements IProductService {
     private final ReceiveAddressMapper addressMapper;
     private final ProImageMapper proImageMapper;
     private final BrandMapper brandMapper;
+    private final CollectionsMapper collectionsMapper;
 
 
-    public ProductServiceImpl(ProductMapper productMapper, BrandMapper brandMapper,ProImageMapper proImageMapper,ReceiveAddressMapper addressMapper,ColorMapper colorMapper,SizeMapper sizeMapper,ProAttributeInfoMapper proAttributeInfoMapper) {
+    public ProductServiceImpl(ProductMapper productMapper, CollectionsMapper collectionsMapper,BrandMapper brandMapper,ProImageMapper proImageMapper,ReceiveAddressMapper addressMapper,ColorMapper colorMapper,SizeMapper sizeMapper,ProAttributeInfoMapper proAttributeInfoMapper) {
         this.productMapper = productMapper;
         this.proAttributeInfoMapper = proAttributeInfoMapper;
         this.colorMapper = colorMapper;
@@ -42,6 +42,7 @@ public class ProductServiceImpl implements IProductService {
         this.addressMapper = addressMapper;
         this.proImageMapper = proImageMapper;
         this.brandMapper = brandMapper;
+        this.collectionsMapper = collectionsMapper;
     }
 
     @Override
@@ -115,7 +116,9 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     public ProductDetailVO getByProId(String proId,String userId) {
+
         ProductDetailVO productDetailVO = new ProductDetailVO();
+        productDetailVO.setUserId(userId);
         //根据商品id查商品
         Product product = productMapper.selectById(proId);
         //根据品牌id查找品牌名；
@@ -128,8 +131,8 @@ public class ProductServiceImpl implements IProductService {
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("size_id","color_id").eq("pro_id",proId);
         List<ProAttributeInfo> proAttributeInfos = proAttributeInfoMapper.selectList(wrapper);
-        List<String> sizeTypeList = new ArrayList<>();
-        List<String> colorNameList = new ArrayList<>();
+        Set<String> sizeTypeList = new HashSet<>();
+        Set<String> colorNameList = new HashSet<>();
         for(ProAttributeInfo proAttributeInfo : proAttributeInfos){
             Size size = sizeMapper.selectById(proAttributeInfo.getSizeId());
             sizeTypeList.add(size.getSizeType());
@@ -140,16 +143,42 @@ public class ProductServiceImpl implements IProductService {
         productDetailVO.setColorNameList(colorNameList);
         productDetailVO.setSizeTypeList(sizeTypeList);
 
+
+
         //根据用户id查询收件地址
         QueryWrapper<ReceiveAddress> queryWrapper = new QueryWrapper<>();
         queryWrapper.select("province","city","area","stree","detail").eq("user_id",userId);
         List<ReceiveAddress> addressList = addressMapper.selectList(queryWrapper);
-        productDetailVO.setAddressesList(addressList);
+        List<String> addressDetailList = new ArrayList<>();
+        for(ReceiveAddress address:addressList){
+            String province = address.getProvince();
+            String city = address.getCity();
+            String area = address.getArea();
+            String stree = address.getStree();
+            String detail = address.getDetail();
+            String addressDetail = province+" "+city+" "+area+" "+stree+" "+detail;
+            addressDetailList.add(addressDetail);
+        }
+        productDetailVO.setAddressesList(addressDetailList);
         //根据商品id查询商品图片缩略图列表
-        QueryWrapper<ProImage> queryWrapper1 = new QueryWrapper<>();
-        queryWrapper.eq("pro_id",proId);
-        List<ProImage> proImageList = proImageMapper.selectList(queryWrapper1);
+        List<String> proImageList = proImageMapper
+                .selectList(new QueryWrapper<ProImage>().select("image").eq("pro_id", proId))
+                .stream()
+                .map(ProImage::getImage)
+                .collect(Collectors.toList());
         productDetailVO.setProImageList(proImageList);
+        //判断商品是否被收藏
+        List<String> proIdList = collectionsMapper
+                .selectList(new QueryWrapper<Collections>().select("pro_id").eq("user_id", userId))
+                .stream()
+                .map(Collections::getProId)
+                .collect(Collectors.toList());
+        for(String colProId:proIdList){
+            if(proId.equals(colProId)){
+                productDetailVO.setIsCollection(true);
+            }
+            productDetailVO.setIsCollection(false);
+        }
         return productDetailVO;
     }
 }
