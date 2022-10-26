@@ -1,5 +1,6 @@
 package com.yiran.user.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yiran.model.entity.User;
 import com.yiran.user.mapper.UserMapper;
 import com.yiran.user.service.IUserService;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
  * @author  weiyuwen
  */
 @Service
-public class UserServiceImpl implements IUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUserService {
     private final UserMapper userMapper;
 
     /**

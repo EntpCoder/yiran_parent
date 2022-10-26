@@ -1,10 +1,11 @@
 package com.yiran.user.service;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.yiran.model.entity.User;
 
 /**
  * @author weiyuwen
  */
-public interface IUserService {
+public interface IUserService extends IService<User> {
     /**
      * 新增用户
      * @param user 用户实例

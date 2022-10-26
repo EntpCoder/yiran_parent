@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan(basePackages = "com.yiran")
 @EnableFeignClients(basePackages = "com.yiran.user")
 public class UserConfig {
+
 }
