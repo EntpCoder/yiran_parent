@@ -89,7 +89,7 @@ public class ProductServiceImpl implements IProductService {
             kindList = Arrays.asList(kindIdArr);
         }
         if(sizeIdArr.length > 0){
-            sizeList = Arrays.asList(kindIdArr);
+            sizeList = Arrays.asList(sizeIdArr);
         }
 
         //查询颜色和尺码在sizeIdStr,colorIdStr里面的 的pro_ids
@@ -102,18 +102,15 @@ public class ProductServiceImpl implements IProductService {
         System.out.println(proIds);
         //查询pro_id在pro_ids里，并且品牌和品类为brandId，kindIdStr的商品
         List<Product> products = productMapper
-                .selectList(new QueryWrapper<Product>().in(!CollectionUtils.isEmpty(proIds),"pro_id",proIds).in(!CollectionUtils.isEmpty(kindList),"kind","kindList").eq("brand_id",brandId));
+                .selectList(new QueryWrapper<Product>().in(!CollectionUtils.isEmpty(proIds),"pro_id",proIds).in(!CollectionUtils.isEmpty(kindList),"kind",kindList).eq("brand_id",brandId));
 
-        List<ProductVO> productVOList = products.stream()
+        return products.stream()
                 .map(p -> {
                     ProductVO vo = new ProductVO();
                     BeanUtils.copyProperties(p, vo);
                     return vo;
                 })
                 .collect(Collectors.toList());
-
-        productVOList.forEach(System.out::println);
-        return productVOList;
     }
 
     @Override
