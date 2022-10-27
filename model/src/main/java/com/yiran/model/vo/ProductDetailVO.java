@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 庆瑞瑞
@@ -15,6 +16,10 @@ import java.util.List;
  */
 @Data
 public class ProductDetailVO {
+    /**
+     * 用户id
+     */
+    private String userId;
     /**
      * 商品Id
      */
@@ -28,6 +33,10 @@ public class ProductDetailVO {
      */
     private String proName;
     /**
+     * 是否被收藏
+     */
+    private Boolean isCollection;
+    /**
      * 商品描述
      */
     @TableField("`describe`")
@@ -39,15 +48,15 @@ public class ProductDetailVO {
     /**
      * 收件地址列表
      */
-    private List<ReceiveAddress> addressesList;
+    private List<String> addressesList;
     /**
      * 尺码列表
      */
-    private List<String> sizeTypeList;
+    private Set<String> sizeTypeList;
     /**
      * 颜色列表
      */
-    private List<String> colorNameList;
+    private Set<String> colorNameList;
     /**
      * 主图
      */
@@ -55,7 +64,7 @@ public class ProductDetailVO {
     /**
      * 商品缩略图
      */
-    private List<ProImage> proImageList;
+    private List<String> proImageList;
     /**
      * 售价
      */
