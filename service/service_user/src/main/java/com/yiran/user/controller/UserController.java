@@ -43,7 +43,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
-    public User getUser(@PathParam("userId") String userId){
-        return userService.selectUser(userId);
+    public R<User> getUser(@PathParam("userId") String userId){
+        return R.ok("get userMessage",userService.selectUser(userId));
     }
 }
