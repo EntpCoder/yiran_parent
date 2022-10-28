@@ -101,7 +101,7 @@ public class FiltrateServiceImpl implements IFiltrateService {
                 .distinct()
                 .collect(Collectors.toList());
         filtrateVO.setSizeList(sizeType);
-        //根据proId查询color_id
+        //根据数据库中color_name
         List<String> colorName = colorMapper
                 .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_name"))
                 .stream()
