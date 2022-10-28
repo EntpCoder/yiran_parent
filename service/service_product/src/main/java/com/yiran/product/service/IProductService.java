@@ -1,5 +1,6 @@
 package com.yiran.product.service;
 
+import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
 import com.yiran.model.vo.ProductVO;
 
@@ -46,5 +47,11 @@ public interface IProductService{
      */
     ProductDetailVO getByProId(String proId,String userId);
 
-
+    /**
+     * 查询筛选栏栏
+     * @param brandId 品牌id
+     * @param kindId 品类id
+     * @return 筛选栏
+     */
+    FiltrateVO getFiltrate(String brandId, String kindId);
 }

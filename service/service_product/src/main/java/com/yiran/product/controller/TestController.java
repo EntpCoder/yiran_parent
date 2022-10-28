@@ -4,7 +4,6 @@ import com.yiran.common.result.R;
 import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
 import com.yiran.model.vo.ProductVO;
-import com.yiran.product.service.IFiltrateService;
 import com.yiran.product.service.IProductService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,10 +20,8 @@ import java.util.List;
 @RequestMapping("/product")
 public class TestController {
     private final IProductService productService;
-    private final IFiltrateService filtrateService;
-    public TestController(IProductService productService, IFiltrateService filtrateService) {
+    public TestController(IProductService productService) {
         this.productService = productService;
-        this.filtrateService = filtrateService;
     }
 
 
@@ -51,7 +48,7 @@ public class TestController {
     }
     @GetMapping("getFiltrate")
     public R<FiltrateVO> getFiltrate(String brandId,String kindId){
-        FiltrateVO filtrateVO = filtrateService.getFiltrate(brandId,kindId);
+        FiltrateVO filtrateVO = productService.getFiltrate(brandId,kindId);
         return filtrateVO != null ? R.ok("result",filtrateVO) : R.fail();
     }
 
