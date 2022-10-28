@@ -59,6 +59,7 @@ public class ProductServiceImpl implements IProductService {
         for (Product p : products) {
             ProductVO productVO = new ProductVO();
             BeanUtils.copyProperties(p, productVO);
+            productVO.setProCount(products.size());
             productVos.add(productVO);
         }
         return productVos;
@@ -75,6 +76,7 @@ public class ProductServiceImpl implements IProductService {
         for (Product p : products) {
             ProductVO productVO = new ProductVO();
             BeanUtils.copyProperties(p, productVO);
+            productVO.setProCount(products.size());
             productVos.add(productVO);
         }
         return productVos;
@@ -112,6 +114,7 @@ public class ProductServiceImpl implements IProductService {
                 .map(p -> {
                     ProductVO vo = new ProductVO();
                     BeanUtils.copyProperties(p, vo);
+                    vo.setProCount(products.size());
                     return vo;
                 })
                 .collect(Collectors.toList());

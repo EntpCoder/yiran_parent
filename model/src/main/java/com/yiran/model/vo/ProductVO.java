@@ -20,4 +20,5 @@ public class ProductVO {
     private BigDecimal sellingPrice;
     private BigDecimal proPrice;
     private BigDecimal discount;
+    private Integer proCount;
 }
