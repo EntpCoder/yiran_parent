@@ -8,9 +8,11 @@ import com.yiran.model.vo.FiltrateVO;
  */
 public interface IFiltrateService {
     /**
-     * 根据品牌id查询筛选栏
+     * 查询筛选栏栏
      * @param brandId 品牌id
+     * @param kindId 品类id
      * @return 筛选栏
      */
-    FiltrateVO getFiltrateByBrandId(String brandId);
+    FiltrateVO getFiltrate(String brandId,String kindId);
+
 }
