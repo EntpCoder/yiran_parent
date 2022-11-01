@@ -28,7 +28,7 @@ public class OssController {
     @PostMapping("/uploadOneFile")
     public R<String> uploandOneFile(MultipartFile file){
         //返回上传的oss的url
-        return file == null ? R.fail():R.ok("",aliOssUtis.uploadOneFile(file));
+        return file == null ? R.fail():R.ok("aliOssUtis.uploadOneFile(file)",aliOssUtis.uploadOneFile(file));
     }
 
     /**
@@ -38,6 +38,6 @@ public class OssController {
      */
     @PostMapping("deleteFile")
     public R<Boolean> deleteFile(String fileUrl){
-        return fileUrl == null ? R.fail():R.ok("",aliOssUtis.deleFile(fileUrl));
+        return fileUrl == null ? R.fail():R.ok("aliOssUtis.deleFile(fileUrl)",aliOssUtis.deleFile(fileUrl));
     }
 }

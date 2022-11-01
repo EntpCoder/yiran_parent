@@ -1,5 +1,6 @@
 package com.yiran.model.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -21,9 +23,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @TableName("multi_menu")
 public class MultiMenu implements Serializable {
-
     private static final long serialVersionUID = 1L;
-
     /**
      * 多级菜单id
      */
@@ -38,5 +38,10 @@ public class MultiMenu implements Serializable {
     /**
      * 父级菜单id
      */
-    private Byte parentId;
+    private String parentId;
+    /**
+     * 数据库中没有，属于二级菜单
+     */
+    @TableField(exist = false)
+    private List<MultiMenu> children;
 }

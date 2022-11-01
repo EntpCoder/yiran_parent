@@ -43,7 +43,6 @@ public class CollectionsImp implements CollServicel {
         QueryWrapper<Collections> collectionsQueryWrapper = new QueryWrapper<>();
         collectionsQueryWrapper.eq("user_id",userId);
         List<Collections> collections = collectionsMapper.selectList(collectionsQueryWrapper);
-        System.out.println("你有吗"+collections);
         for (Collections c :
              collections) {
             //一条收藏的数据

@@ -33,9 +33,7 @@ public class CartController {
      */
     @PostMapping("/save")
     public R<Boolean> saveCart(Cart cart){
-        boolean b = cartService.saveCart(cart);
-        System.out.println(b);
-        return R.ok("",true);
+        return cartService.saveCart(cart) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.FAIL);
     }
 
     /**
@@ -55,13 +53,10 @@ public class CartController {
      */
     @DeleteMapping("/deleaddCart")
     public R<Boolean> deleaddCart(String[] cartIds){
-        boolean b = cartService.deleteCartByIds(cartIds);
-        System.out.println(b);
-        return R.ok("",true);
+        return cartService.deleteCartByIds(cartIds) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.FAIL);
     }
     @PostMapping("/updataNums")
-    public R<Boolean> updateNumByCartId(String cartId,
-                                        Integer nums){
+    public R<Boolean> updateNumByCartId(String cartId, Integer nums){
         return cartService.increaseQuantity(cartId, nums) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.DATA_EMPTY);
     }
 }
