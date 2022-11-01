@@ -20,8 +20,8 @@ public class CartController {
     public CartController(ICartService cartService){
         this.cartService = cartService;
     }
-    @GetMapping("/userCart/{userId}")
-    public R<List<CartVO>> userCart(@PathVariable("userId") String userId){
+    @GetMapping("/userCart")
+    public R<List<CartVO>> userCart(@RequestHeader("userId") String userId){
         List<CartVO> cartList = cartService.getUserCart(userId);
         return cartList == null ? R.fail() : R.ok("cartList",cartList);
     }
@@ -32,7 +32,8 @@ public class CartController {
      * @return 返回R
      */
     @PostMapping("/save")
-    public R<Boolean> saveCart(Cart cart){
+    public R<Boolean> saveCart(Cart cart,@RequestHeader("userId") String userId){
+        cart.setUserId(userId);
         return cartService.saveCart(cart) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.FAIL);
     }
 

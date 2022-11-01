@@ -278,7 +278,7 @@ public class ProductServiceImpl implements IProductService {
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("pro_attribute_info_id").eq("pro_id",proId).eq("size_id",sizeId).eq("color_id",colorId);
         ProAttributeInfo proAttributeInfo = proAttributeInfoMapper.selectOne(wrapper);
-        return proAttributeInfo.getProAttributeInfoId();
+        return proAttributeInfo == null ? null : proAttributeInfo.getProAttributeInfoId();
     }
 }
 

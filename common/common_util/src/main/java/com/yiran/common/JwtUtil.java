@@ -54,7 +54,7 @@ public class JwtUtil {
 
     public static void main(String[] args) {
         User user = new User();
-        user.setUserId("123");
+        user.setUserId("song");
         user.setUsername("sf");
         user.setImage("123213");
         String sign = sign(user);
