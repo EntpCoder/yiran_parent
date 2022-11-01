@@ -54,4 +54,14 @@ public interface IProductService{
      */
     FiltrateVO getFiltrate(String brandId, String kindId);
 
+    /**
+     * 根据商品id，颜色id，尺码id查询商品属性id
+     * @param proId 商品id
+     * @param sizeId 颜色id
+     * @param colorId 尺码id
+     * @return 商品属性id
+     */
+    String getProInfoId(String proId,String sizeId,String colorId);
+
+
 }

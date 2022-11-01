@@ -131,17 +131,16 @@ public class ProductServiceImpl implements IProductService {
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("size_id","color_id").eq("pro_id",proId);
         List<ProAttributeInfo> proAttributeInfos = proAttributeInfoMapper.selectList(wrapper);
-        Set<String> sizeTypeList = new HashSet<>();
-        Set<String> colorNameList = new HashSet<>();
+        List<Size> sizeList = new ArrayList<>();
+        List<Color> colorList = new ArrayList<>();
         for(ProAttributeInfo proAttributeInfo : proAttributeInfos){
             Size size = sizeMapper.selectById(proAttributeInfo.getSizeId());
-            sizeTypeList.add(size.getSizeType());
-
+            sizeList.add(size);
             Color color = colorMapper.selectById(proAttributeInfo.getColorId());
-            colorNameList.add(color.getColorName());
+            colorList.add(color);
         }
-        productDetailVO.setColorNameList(colorNameList);
-        productDetailVO.setSizeTypeList(sizeTypeList);
+        productDetailVO.setSizeList(sizeList);
+        productDetailVO.setColorList(colorList);
 
 
         //根据商品id查询商品图片缩略图列表
@@ -272,6 +271,14 @@ public class ProductServiceImpl implements IProductService {
         }
         filtrateVO.setColorList(colorList);
         return filtrateVO;
+    }
+
+    @Override
+    public String getProInfoId(String proId, String sizeId, String colorId) {
+        QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
+        wrapper.select("pro_attribute_info_id").eq("pro_id",proId).eq("size_id",sizeId).eq("color_id",colorId);
+        ProAttributeInfo proAttributeInfo = proAttributeInfoMapper.selectOne(wrapper);
+        return proAttributeInfo.getProAttributeInfoId();
     }
 }
 

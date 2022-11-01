@@ -1,6 +1,7 @@
 package com.yiran.model.vo;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.yiran.model.entity.Color;
 import com.yiran.model.entity.ProImage;
 import com.yiran.model.entity.ReceiveAddress;
 import com.yiran.model.entity.Size;
@@ -42,11 +43,11 @@ public class ProductDetailVO {
     /**
      * 尺码列表
      */
-    private Set<String> sizeTypeList;
+    private List<Size> sizeList;
     /**
      * 颜色列表
      */
-    private Set<String> colorNameList;
+    private List<Color> colorList;
     /**
      * 主图
      */
