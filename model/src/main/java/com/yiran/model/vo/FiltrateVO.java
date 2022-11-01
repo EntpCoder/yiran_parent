@@ -1,5 +1,9 @@
 package com.yiran.model.vo;
 
+import com.yiran.model.entity.Brand;
+import com.yiran.model.entity.Color;
+import com.yiran.model.entity.MultiMenu;
+import com.yiran.model.entity.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +19,8 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FiltrateVO {
-    private Map<String,String> kindMap;
-    private Map<String,String> brandMap;
-    private Map<String,String> colorMap;
-    private Map<String,String> sizeMap;
+    private List<MultiMenu> kindList;
+    private List<Brand> brandList;
+    private List<Color> colorList;
+    private List<Size> sizeList;
 }

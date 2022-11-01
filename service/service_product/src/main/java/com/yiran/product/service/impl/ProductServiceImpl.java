@@ -159,11 +159,11 @@ public class ProductServiceImpl implements IProductService {
         FiltrateVO filtrateVO = new FiltrateVO();
         //只传品牌时
         if (kindId == null) {
-            Map<String,String> brandMap = new HashMap<>(16);
+            List<Brand> brandList = new ArrayList<>();
             //根据品牌id查找品牌名
             Brand brand = brandMapper.selectById(brandId);
-            brandMap.put(brandId,brand.getBrandName());
-            filtrateVO.setBrandMap(brandMap);
+            brandList.add(brand);
+            filtrateVO.setBrandList(brandList);
             //根据品牌id查询商品
             QueryWrapper<Product> brandWrapper = new QueryWrapper<>();
             brandWrapper.eq("brand_id", brandId);
@@ -180,16 +180,22 @@ public class ProductServiceImpl implements IProductService {
                     .stream()
                     .map(MultiMenu::getTitle)
                     .collect(Collectors.toList());
-            Map<String,String> kindMap = list.stream().collect(Collectors.toMap(key -> key, key -> kinds.get(list.indexOf(key))));
-            filtrateVO.setKindMap(kindMap);
+            List<MultiMenu> kindList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++){
+                MultiMenu menu = new MultiMenu();
+                menu.setMenuId(list.get(i));
+                menu.setTitle(kinds.get(i));
+                kindList.add(menu);
+            }
+            filtrateVO.setKindList(kindList);
         }
         //只传品类时
         if (brandId == null){
-            Map<String,String> kindMap = new HashMap<>(16);
             //根据品类id查询品类名
             MultiMenu menu = multiMenuMapper.selectById(kindId);
-            kindMap.put(kindId,menu.getTitle());
-            filtrateVO.setKindMap(kindMap);
+            List<MultiMenu> kindList = new ArrayList<>();
+            kindList.add(menu);
+            filtrateVO.setKindList(kindList);
             //根据品类id查询商品
             QueryWrapper<Product> brandWrapper = new QueryWrapper<>();
             brandWrapper.eq("kind", kindId);
@@ -214,8 +220,14 @@ public class ProductServiceImpl implements IProductService {
                     .distinct()
                     .collect(Collectors.toList());
 
-            Map<String,String> brandMap = brandIds.stream().collect(Collectors.toMap(key -> key, key -> brandNames.get(brandIds.indexOf(key))));
-            filtrateVO.setBrandMap(brandMap);
+            List<Brand> brandList = new ArrayList<>();
+            for (int i = 0; i < brandIds.size(); i++){
+                Brand brand = new Brand();
+                brand.setBrandId(brandIds.get(i));
+                brand.setBrandName(brandNames.get(i));
+                brandList.add(brand);
+            }
+            filtrateVO.setBrandList(brandList);
         }
         //查询数据库中size_type
         List<String> sizeIds = sizeMapper
@@ -230,8 +242,14 @@ public class ProductServiceImpl implements IProductService {
                 .map(Size::getSizeType)
                 .distinct()
                 .collect(Collectors.toList());
-        Map<String,String> sizeMap = sizeIds.stream().collect(Collectors.toMap(key -> key, key -> sizeType.get(sizeIds.indexOf(key))));
-        filtrateVO.setSizeMap(sizeMap);
+        List<Size> sizeList = new ArrayList<>();
+        for (int i = 0; i<sizeIds.size(); i++){
+            Size size = new Size();
+            size.setSizeId(sizeIds.get(i));
+            size.setSizeType(sizeType.get(i));
+            sizeList.add(size);
+        }
+        filtrateVO.setSizeList(sizeList);
         //查询数据库中color_name
         List<String> colorIds = colorMapper
                 .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_id"))
@@ -245,8 +263,14 @@ public class ProductServiceImpl implements IProductService {
                 .map(Color::getColorName)
                 .distinct()
                 .collect(Collectors.toList());
-        Map<String,String> colorMap = colorIds.stream().collect(Collectors.toMap(key -> key, key -> colorName.get(colorIds.indexOf(key))));
-        filtrateVO.setColorMap(colorMap);
+        List<Color> colorList = new ArrayList<>();
+        for (int i = 0; i < colorIds.size(); i++){
+            Color color = new Color();
+            color.setColorId(colorIds.get(i));
+            color.setColorName(colorName.get(i));
+            colorList.add(color);
+        }
+        filtrateVO.setColorList(colorList);
         return filtrateVO;
     }
 }
