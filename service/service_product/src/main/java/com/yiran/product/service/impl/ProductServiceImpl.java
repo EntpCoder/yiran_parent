@@ -131,14 +131,16 @@ public class ProductServiceImpl implements IProductService {
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("size_id","color_id").eq("pro_id",proId);
         List<ProAttributeInfo> proAttributeInfos = proAttributeInfoMapper.selectList(wrapper);
-        List<Size> sizeList = new ArrayList<>();
-        List<Color> colorList = new ArrayList<>();
+        Set<Size> sizeSet = new HashSet<>();
+        Set<Color> colorSet = new HashSet<>();
         for(ProAttributeInfo proAttributeInfo : proAttributeInfos){
             Size size = sizeMapper.selectById(proAttributeInfo.getSizeId());
-            sizeList.add(size);
+            sizeSet.add(size);
             Color color = colorMapper.selectById(proAttributeInfo.getColorId());
-            colorList.add(color);
+            colorSet.add(color);
         }
+        List<Size> sizeList = new ArrayList<>(sizeSet);
+        List<Color> colorList = new ArrayList<>(colorSet);
         productDetailVO.setSizeList(sizeList);
         productDetailVO.setColorList(colorList);
 
