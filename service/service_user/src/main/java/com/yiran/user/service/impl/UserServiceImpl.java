@@ -1,6 +1,8 @@
 package com.yiran.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yiran.common.JwtUtil;
 import com.yiran.model.entity.User;
 import com.yiran.user.mapper.UserMapper;
 import com.yiran.user.service.IUserService;
@@ -21,6 +23,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
      */
     public UserServiceImpl(UserMapper userMapper){
         this.userMapper=userMapper;
+    }
+    @Override
+    public User login(String userName, String password) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("username",userName);
+        queryWrapper.eq("password",password);
+        return userMapper.selectOne(queryWrapper);
     }
 
     /**

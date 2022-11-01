@@ -10,6 +10,7 @@ import java.math.BigDecimal;
  */
 @Data
 public class CartVO {
+    private String cartId;
     private String proAttributeInfoId;
     private String proMainImageAddress;
     private String proName;

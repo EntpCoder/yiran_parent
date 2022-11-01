@@ -2,6 +2,7 @@ package com.yiran.cart.controller;
 
 import com.yiran.cart.service.ICartService;
 import com.yiran.common.result.R;
+import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.Cart;
 import com.yiran.model.vo.CartVO;
 import org.springframework.web.bind.annotation.*;
@@ -39,14 +40,12 @@ public class CartController {
 
     /**
      * 根据购物车id来删除单条购物车里的数据
-     * @param cart 购物车对象
+     * @param cartId 购物车对象
      * @return R
      */
-    @DeleteMapping("/deleCart")
-    public R<Boolean> deleCart(Cart cart){
-        boolean b = cartService.deleteCartById(cart.getCartId());
-        System.out.println(b);
-        return R.ok("",true);
+    @DeleteMapping("/deleCart/{cartId}")
+    public R<Boolean> deleCart(@PathVariable("cartId") String cartId){
+        return cartService.deleteCartById(cartId)?R.ok("isDelete",true):R.fail(ResultCodeEnum.DATA_EMPTY);
     }
 
     /**
@@ -59,6 +58,11 @@ public class CartController {
         boolean b = cartService.deleteCartByIds(cartIds);
         System.out.println(b);
         return R.ok("",true);
+    }
+    @PostMapping("/updataNums")
+    public R<Boolean> updateNumByCartId(String cartId,
+                                        Integer nums){
+        return cartService.increaseQuantity(cartId, nums) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.DATA_EMPTY);
     }
 }
 

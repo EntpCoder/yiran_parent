@@ -7,6 +7,13 @@ import com.yiran.model.entity.User;
  */
 public interface IUserService extends IService<User> {
     /**
+     * 用户登录发放token
+     * @param userName 用户名
+     * @param password 用户密码
+     * @return token
+     */
+    User login(String userName,String password);
+    /**
      * 新增用户
      * @param user 用户实例
      * @return 加入的个数

@@ -1,6 +1,7 @@
 package com.yiran.cart.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yiran.cart.mapper.*;
 import com.yiran.cart.service.ICartService;
 
@@ -95,5 +96,13 @@ public class CartServiceImpl  implements ICartService {
     @Override
     public boolean deleteCartByIds(String[] cartId){
         return cartMapper.deleteBatchIds(Arrays.asList(cartId)) > 0;
+    }
+
+    @Override
+    public boolean increaseQuantity(String cartId,Integer nums) {
+        Cart cart = new Cart();
+        cart.setCartId(cartId);
+        cart.setNums(nums);
+        return cartMapper.updateById(cart) > 0;
     }
 }

@@ -43,4 +43,12 @@ public interface ICartService {
      */
     boolean deleteCartByIds(String[] cartId);
 
+    /**
+     * 增加购物数量
+     * @param cartId 购物车id
+     * @param nums 数量
+     * @return 是否成功
+     */
+    boolean increaseQuantity(String cartId,Integer nums);
+
 }

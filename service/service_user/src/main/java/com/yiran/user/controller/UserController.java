@@ -1,5 +1,6 @@
 package com.yiran.user.controller;
 
+import com.yiran.common.JwtUtil;
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.User;
@@ -14,7 +15,7 @@ import javax.websocket.server.PathParam;
  * 实现
  */
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
     private final IUserService userService;
 
@@ -26,6 +27,11 @@ public class UserController {
         this.userService = userService;
     }
 
+    @PostMapping("/accountLogin")
+    public R<String> login(String userName,String password){
+        User user = userService.login(userName,password);
+        return user == null ? R.fail(ResultCodeEnum.LOGIN_FAIL) : R.ok("token",JwtUtil.sign(user));
+    }
 
     @PostMapping("/redister")
     public R<Boolean> redister(User user){
