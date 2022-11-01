@@ -2,7 +2,6 @@ package com.yiran.product.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.*;
-import com.yiran.model.entity.Collections;
 import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
 import com.yiran.model.vo.ProductVO;
@@ -29,22 +28,18 @@ public class ProductServiceImpl implements IProductService {
     private final ProAttributeInfoMapper proAttributeInfoMapper;
     private final ColorMapper colorMapper;
     private final SizeMapper sizeMapper;
-    private final ReceiveAddressMapper addressMapper;
     private final ProImageMapper proImageMapper;
     private final BrandMapper brandMapper;
-    private final CollectionsMapper collectionsMapper;
     private final MultiMenuMapper multiMenuMapper;
 
 
-    public ProductServiceImpl(ProductMapper productMapper, CollectionsMapper collectionsMapper, BrandMapper brandMapper, ProImageMapper proImageMapper, ReceiveAddressMapper addressMapper, ColorMapper colorMapper, SizeMapper sizeMapper, ProAttributeInfoMapper proAttributeInfoMapper, MultiMenuMapper multiMenuMapper) {
+    public ProductServiceImpl(ProductMapper productMapper,BrandMapper brandMapper, ProImageMapper proImageMapper,ColorMapper colorMapper, SizeMapper sizeMapper, ProAttributeInfoMapper proAttributeInfoMapper, MultiMenuMapper multiMenuMapper) {
         this.productMapper = productMapper;
         this.proAttributeInfoMapper = proAttributeInfoMapper;
         this.colorMapper = colorMapper;
         this.sizeMapper = sizeMapper;
-        this.addressMapper = addressMapper;
         this.proImageMapper = proImageMapper;
         this.brandMapper = brandMapper;
-        this.collectionsMapper = collectionsMapper;
         this.multiMenuMapper = multiMenuMapper;
     }
 
@@ -162,14 +157,13 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public FiltrateVO getFiltrate(String brandId, String kindId) {
         FiltrateVO filtrateVO = new FiltrateVO();
-        List<String> brandList = new ArrayList<>();
-        List<String> kindList = new ArrayList<>();
         //只传品牌时
         if (kindId == null) {
+            Map<String,String> brandMap = new HashMap<>(16);
             //根据品牌id查找品牌名
             Brand brand = brandMapper.selectById(brandId);
-            brandList.add(brand.getBrandName());
-            filtrateVO.setBrandList(brandList);
+            brandMap.put(brandId,brand.getBrandName());
+            filtrateVO.setBrandMap(brandMap);
             //根据品牌id查询商品
             QueryWrapper<Product> brandWrapper = new QueryWrapper<>();
             brandWrapper.eq("brand_id", brandId);
@@ -179,21 +173,23 @@ public class ProductServiceImpl implements IProductService {
             for (Product p : products) {
                 kindIds.add(p.getKind());
             }
+            List<String> list = new ArrayList<>(kindIds);
             //根据商品kindId查询kinds
             List<String> kinds = multiMenuMapper
                     .selectList(new QueryWrapper<MultiMenu>().select("title").in("menu_id", kindIds))
                     .stream()
                     .map(MultiMenu::getTitle)
-                    .distinct()
                     .collect(Collectors.toList());
-            filtrateVO.setKindList(kinds);
+            Map<String,String> kindMap = list.stream().collect(Collectors.toMap(key -> key, key -> kinds.get(list.indexOf(key))));
+            filtrateVO.setKindMap(kindMap);
         }
         //只传品类时
         if (brandId == null){
+            Map<String,String> kindMap = new HashMap<>(16);
             //根据品类id查询品类名
             MultiMenu menu = multiMenuMapper.selectById(kindId);
-            kindList.add(menu.getTitle());
-            filtrateVO.setKindList(kindList);
+            kindMap.put(kindId,menu.getTitle());
+            filtrateVO.setKindMap(kindMap);
             //根据品类id查询商品
             QueryWrapper<Product> brandWrapper = new QueryWrapper<>();
             brandWrapper.eq("kind", kindId);
@@ -217,24 +213,40 @@ public class ProductServiceImpl implements IProductService {
                     .map(Brand::getBrandName)
                     .distinct()
                     .collect(Collectors.toList());
-            filtrateVO.setBrandList(brandNames);
+
+            Map<String,String> brandMap = brandIds.stream().collect(Collectors.toMap(key -> key, key -> brandNames.get(brandIds.indexOf(key))));
+            filtrateVO.setBrandMap(brandMap);
         }
         //查询数据库中size_type
+        List<String> sizeIds = sizeMapper
+                .selectList(new QueryWrapper<Size>().orderByAsc("size_id").select("size_id"))
+                .stream()
+                .map(Size::getSizeId)
+                .distinct()
+                .collect(Collectors.toList());
         List<String> sizeType = sizeMapper
                 .selectList(new QueryWrapper<Size>().orderByAsc("size_id").select("size_type"))
                 .stream()
                 .map(Size::getSizeType)
                 .distinct()
                 .collect(Collectors.toList());
-        filtrateVO.setSizeList(sizeType);
+        Map<String,String> sizeMap = sizeIds.stream().collect(Collectors.toMap(key -> key, key -> sizeType.get(sizeIds.indexOf(key))));
+        filtrateVO.setSizeMap(sizeMap);
         //查询数据库中color_name
+        List<String> colorIds = colorMapper
+                .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_id"))
+                .stream()
+                .map(Color::getColorId)
+                .distinct()
+                .collect(Collectors.toList());
         List<String> colorName = colorMapper
                 .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_name"))
                 .stream()
                 .map(Color::getColorName)
                 .distinct()
                 .collect(Collectors.toList());
-        filtrateVO.setColorList(colorName);
+        Map<String,String> colorMap = colorIds.stream().collect(Collectors.toMap(key -> key, key -> colorName.get(colorIds.indexOf(key))));
+        filtrateVO.setColorMap(colorMap);
         return filtrateVO;
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author by LvJunLong
@@ -14,8 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FiltrateVO {
-    private List<String> kindList;
-    private List<String> brandList;
-    private List<String> colorList;
-    private List<String> sizeList;
+    private Map<String,String> kindMap;
+    private Map<String,String> brandMap;
+    private Map<String,String> colorMap;
+    private Map<String,String> sizeMap;
 }
