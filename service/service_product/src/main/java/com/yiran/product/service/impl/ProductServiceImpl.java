@@ -121,10 +121,9 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public ProductDetailVO getByProId(String proId,String userId) {
+    public ProductDetailVO getByProId(String proId) {
 
         ProductDetailVO productDetailVO = new ProductDetailVO();
-        productDetailVO.setUserId(userId);
         //根据商品id查商品
         Product product = productMapper.selectById(proId);
         //根据品牌id查找品牌名；
@@ -150,22 +149,6 @@ public class ProductServiceImpl implements IProductService {
         productDetailVO.setSizeTypeList(sizeTypeList);
 
 
-
-        //根据用户id查询收件地址
-        QueryWrapper<ReceiveAddress> queryWrapper = new QueryWrapper<>();
-        queryWrapper.select("province","city","area","stree","detail").eq("user_id",userId);
-        List<ReceiveAddress> addressList = addressMapper.selectList(queryWrapper);
-        List<String> addressDetailList = new ArrayList<>();
-        for(ReceiveAddress address:addressList){
-            String province = address.getProvince();
-            String city = address.getCity();
-            String area = address.getArea();
-            String stree = address.getStree();
-            String detail = address.getDetail();
-            String addressDetail = province+" "+city+" "+area+" "+stree+" "+detail;
-            addressDetailList.add(addressDetail);
-        }
-        productDetailVO.setAddressesList(addressDetailList);
         //根据商品id查询商品图片缩略图列表
         List<String> proImageList = proImageMapper
                 .selectList(new QueryWrapper<ProImage>().select("image").eq("pro_id", proId))
@@ -173,18 +156,6 @@ public class ProductServiceImpl implements IProductService {
                 .map(ProImage::getImage)
                 .collect(Collectors.toList());
         productDetailVO.setProImageList(proImageList);
-        //判断商品是否被收藏
-        List<String> proIdList = collectionsMapper
-                .selectList(new QueryWrapper<Collections>().select("pro_id").eq("user_id", userId))
-                .stream()
-                .map(Collections::getProId)
-                .collect(Collectors.toList());
-        for(String colProId:proIdList){
-            if(proId.equals(colProId)){
-                productDetailVO.setIsCollection(true);
-            }
-            productDetailVO.setIsCollection(false);
-        }
         return productDetailVO;
     }
 

@@ -42,10 +42,9 @@ public interface IProductService{
     /**
      * 根据商品id点击查询商品详情
      * @param proId 商品id
-     * @param userId 用户id
      * @return 商品详情
      */
-    ProductDetailVO getByProId(String proId,String userId);
+    ProductDetailVO getByProId(String proId);
 
     /**
      * 查询筛选栏栏
@@ -54,4 +53,5 @@ public interface IProductService{
      * @return 筛选栏
      */
     FiltrateVO getFiltrate(String brandId, String kindId);
+
 }

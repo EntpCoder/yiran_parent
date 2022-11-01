@@ -17,10 +17,6 @@ import java.util.Set;
 @Data
 public class ProductDetailVO {
     /**
-     * 用户id
-     */
-    private String userId;
-    /**
      * 商品Id
      */
     private String proId;
@@ -32,10 +28,7 @@ public class ProductDetailVO {
      * 商品名称
      */
     private String proName;
-    /**
-     * 是否被收藏
-     */
-    private Boolean isCollection;
+
     /**
      * 商品描述
      */
@@ -45,10 +38,7 @@ public class ProductDetailVO {
      * 商品编号
      */
     private String proNum;
-    /**
-     * 收件地址列表
-     */
-    private List<String> addressesList;
+
     /**
      * 尺码列表
      */

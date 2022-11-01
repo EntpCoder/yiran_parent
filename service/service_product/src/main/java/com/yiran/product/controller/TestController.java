@@ -40,14 +40,14 @@ public class TestController {
         List<ProductVO> productVOList = productService.getByBrandKindSizeColor(brandId, kindIdArr, sizeIdArr, colorIdArr);
         return productVOList.size() > 0 ? R.ok("result",productVOList) : R.fail();
     }
-    @GetMapping("getByProId/{proId}/{userId}")
-    public R<ProductDetailVO> getByProId(@PathVariable("proId") String proId,@PathVariable("userId")String userId){
-        ProductDetailVO productDetailVO = productService.getByProId(proId, userId);
+    @GetMapping("getByProId/{proId}")
+    public R<ProductDetailVO> getByProId(@PathVariable("proId") String proId){
+        ProductDetailVO productDetailVO = productService.getByProId(proId);
         return productDetailVO != null ? R.ok("result",productDetailVO) : R.fail();
 
     }
     @GetMapping("getFiltrate")
-    public R<FiltrateVO> getFiltrate(String brandId,String kindId){
+    public R<FiltrateVO> getFiltrate( String brandId,String kindId){
         FiltrateVO filtrateVO = productService.getFiltrate(brandId,kindId);
         return filtrateVO != null ? R.ok("result",filtrateVO) : R.fail();
     }
