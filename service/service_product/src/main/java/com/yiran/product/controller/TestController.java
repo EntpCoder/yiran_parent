@@ -41,8 +41,8 @@ public class TestController {
     }
 
     @GetMapping("getByBrandKindSizeColor")
-    public R<List<ProductVO>> getByBrandKindSizeColor(String brandId, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr) {
-        List<ProductVO> productVOList = productService.getByBrandKindSizeColor(brandId, kindIdArr, sizeIdArr, colorIdArr);
+    public R<List<ProductVO>> getByBrandKindSizeColor(String[] brandIdArr, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr) {
+        List<ProductVO> productVOList = productService.getByBrandKindSizeColor(brandIdArr, kindIdArr, sizeIdArr, colorIdArr);
         return productVOList.size() > 0 ? R.ok("result", productVOList) : R.fail();
     }
 

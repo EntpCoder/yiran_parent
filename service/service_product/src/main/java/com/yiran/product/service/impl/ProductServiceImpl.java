@@ -78,10 +78,11 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public List<ProductVO> getByBrandKindSizeColor(String brandId, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr) {
+    public List<ProductVO> getByBrandKindSizeColor(String[] brandIdArr, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr) {
         List<String> colorList = null;
         List<String> sizeList = null;
         List<String> kindList = null;
+        List<String> brandList = null;
 
         if(colorIdArr.length>0){
             colorList = Arrays.asList(colorIdArr);
@@ -91,6 +92,9 @@ public class ProductServiceImpl implements IProductService {
         }
         if(sizeIdArr.length > 0){
             sizeList = Arrays.asList(sizeIdArr);
+        }
+        if(brandIdArr.length > 0){
+            brandList = Arrays.asList(brandIdArr);
         }
         List<ProductVO> productVOList = new ArrayList<>();
         //查询颜色和尺码在sizeIdStr,colorIdStr里面的 的pro_ids
@@ -104,7 +108,7 @@ public class ProductServiceImpl implements IProductService {
         if (proIds.size()>0){
         //查询pro_id在pro_ids里，并且品牌和品类为brandId，kindIdStr的商品
         List<Product> products = productMapper
-                .selectList(new QueryWrapper<Product>().in(!CollectionUtils.isEmpty(proIds),"pro_id",proIds).in(!CollectionUtils.isEmpty(kindList),"kind",kindList).eq("brand_id",brandId));
+                .selectList(new QueryWrapper<Product>().in(!CollectionUtils.isEmpty(proIds),"pro_id",proIds).in(!CollectionUtils.isEmpty(kindList),"kind",kindList).in(!CollectionUtils.isEmpty(brandList),"brand_id",brandList));
 
             productVOList = products.stream()
                     .map(p -> {

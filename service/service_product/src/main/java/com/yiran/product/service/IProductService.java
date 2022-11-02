@@ -31,13 +31,13 @@ public interface IProductService{
 
     /**
      * 多条件筛选
-     * @param brandId 品牌id
+     * @param brandArr 品牌id
      * @param kindIdArr 品类id数组
      * @param sizeIdArr 尺码id数组
      * @param colorIdArr 颜色id数组
      * @return 符合筛选条件的商品
      */
-    List<ProductVO> getByBrandKindSizeColor(String brandId, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr);
+    List<ProductVO> getByBrandKindSizeColor(String[] brandArr, String[] kindIdArr, String[] sizeIdArr, String[] colorIdArr);
 
     /**
      * 根据商品id点击查询商品详情
