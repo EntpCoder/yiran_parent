@@ -16,11 +16,13 @@ import java.util.List;
  */
 public interface ICartService {
     /**
-     * 根据用户id查询用户购物车数据
+     * 根据用户id查询用户购物车数据,也可以传入购物车id数组,只把指定购物车id信息返回
+     * (用于用户购物车查询，和勾选购物车信息后确认订单页面查根据购物车id询商品信息)
      * @param userId 用户id
+     * @param cartIds cartIds
      * @return 用户的购物车
      */
-    List<CartVO> getUserCart(String userId);
+    List<CartVO> getUserCart(String userId,String[] cartIds);
 
     /**
      *根据商品属性id来是实现购物车商品的-增加

@@ -7,6 +7,7 @@ import com.yiran.model.entity.Cart;
 import com.yiran.model.vo.CartVO;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -21,8 +22,8 @@ public class CartController {
         this.cartService = cartService;
     }
     @GetMapping("/userCart")
-    public R<List<CartVO>> userCart(@RequestHeader("userId") String userId){
-        List<CartVO> cartList = cartService.getUserCart(userId);
+    public R<List<CartVO>> userCart(@RequestHeader("userId") String userId,String[] cartIds){
+        List<CartVO> cartList = cartService.getUserCart(userId,cartIds);
         return cartList == null ? R.fail() : R.ok("cartList",cartList);
     }
 
@@ -42,8 +43,8 @@ public class CartController {
      * @param cartId 购物车对象
      * @return R
      */
-    @DeleteMapping("/deleCart/{cartId}")
-    public R<Boolean> deleCart(@PathVariable("cartId") String cartId){
+    @DeleteMapping("/deleteCart/{cartId}")
+    public R<Boolean> deleteCart(@PathVariable("cartId") String cartId){
         return cartService.deleteCartById(cartId)?R.ok("isDelete",true):R.fail(ResultCodeEnum.DATA_EMPTY);
     }
 
@@ -52,11 +53,11 @@ public class CartController {
      * @param cartIds 购物车id
      * @return R
      */
-    @DeleteMapping("/deleaddCart")
-    public R<Boolean> deleaddCart(String[] cartIds){
+    @DeleteMapping("/deleteAddCart")
+    public R<Boolean> deleteAddCart(String[] cartIds){
         return cartService.deleteCartByIds(cartIds) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.FAIL);
     }
-    @PostMapping("/updataNums")
+    @PostMapping("/updateNums")
     public R<Boolean> updateNumByCartId(String cartId, Integer nums){
         return cartService.increaseQuantity(cartId, nums) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.DATA_EMPTY);
     }

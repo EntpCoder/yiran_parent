@@ -1,7 +1,6 @@
 package com.yiran.cart.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yiran.cart.mapper.*;
 import com.yiran.cart.service.ICartService;
 
@@ -10,9 +9,8 @@ import com.yiran.model.vo.CartVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -41,12 +39,20 @@ public class CartServiceImpl  implements ICartService {
     }
 
     @Override
-    public List<CartVO> getUserCart(String userId) {
+    public List<CartVO> getUserCart(String userId,String[] cartIds) {
         List<CartVO> cartVos = new ArrayList<>();
         // 购物车查询
         QueryWrapper<Cart> cartQueryWrapper = new QueryWrapper<>();
         cartQueryWrapper.eq("user_id",userId);
         List<Cart> carts = cartMapper.selectList(cartQueryWrapper);
+        // 如果根据指定购物车id批量查询购物车数据(批量选择商品下订单时)
+        if(cartIds != null && cartIds.length != 0){
+            Set<String> cartIdSet = new HashSet<>(Arrays.asList(cartIds));
+            carts = carts.stream()
+                    .filter(c -> cartIdSet.contains(c.getCartId()))
+                    .collect(Collectors.toList());
+        }
+        System.out.println(carts);
         for (Cart c:
              carts) {
             // 一条购物车的数据
