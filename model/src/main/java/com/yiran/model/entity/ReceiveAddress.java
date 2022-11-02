@@ -79,6 +79,8 @@ public class ReceiveAddress implements Serializable {
      * 用户id
      */
     private String userId;
+    @TableField(exist = false)
+    private boolean isDefault;
     @TableLogic
     @TableField(fill = FieldFill.INSERT)
     private Boolean isDelete;

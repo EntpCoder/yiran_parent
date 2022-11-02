@@ -3,11 +3,14 @@ package com.yiran.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.ReceiveAddress;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yiran.model.entity.User;
 import com.yiran.user.mapper.ReceiveAddressMapper;
+import com.yiran.user.mapper.UserMapper;
 import com.yiran.user.service.IReceiveAddressService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -21,10 +24,11 @@ import java.util.List;
 @Service
 public class ReceiveAddressServiceImpl extends ServiceImpl<ReceiveAddressMapper, ReceiveAddress> implements IReceiveAddressService {
     private final ReceiveAddressMapper receiveAddressMapper;
+    private final UserMapper userMapper;
 
-
-    public ReceiveAddressServiceImpl(ReceiveAddressMapper receiveAddressMapper) {
+    public ReceiveAddressServiceImpl(ReceiveAddressMapper receiveAddressMapper,UserMapper userMapper) {
         this.receiveAddressMapper = receiveAddressMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
@@ -75,16 +79,15 @@ public class ReceiveAddressServiceImpl extends ServiceImpl<ReceiveAddressMapper,
 
     @Override
     public List<ReceiveAddress> getAddressByUserId(String userId) {
-//        查找用户的所有地址
+        // 查找用户的所有地址
         QueryWrapper <ReceiveAddress> addressQueryWrapper=new QueryWrapper<>();
         addressQueryWrapper.eq("user_id",userId);
         List<ReceiveAddress> addressList=receiveAddressMapper.selectList(addressQueryWrapper);
-//        把地址都一个个输出
-        for (ReceiveAddress address:addressList
-             ) {
-            address=receiveAddressMapper.selectById(address.getReceiveId());
-            System.out.println(address);
-        }
+        User user = userMapper.selectById(userId);
+        // 标识用户默认地址
+        addressList.stream()
+                .filter(r->r.getReceiveId().equals(user.getDefaultAddressId()))
+                .forEach(r -> r.setDefault(true));
         return addressList;
     }
 

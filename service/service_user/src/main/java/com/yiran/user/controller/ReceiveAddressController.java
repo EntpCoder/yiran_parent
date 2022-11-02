@@ -4,10 +4,7 @@ import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.ReceiveAddress;
 import com.yiran.user.service.IReceiveAddressService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
@@ -63,7 +60,7 @@ public class ReceiveAddressController{
         return receiveAddressService.updateAddress(addressId)?R.ok("update ok",true):R.fail(ResultCodeEnum.FAIL);
     }
     @GetMapping("/getUserAddress")
-    public R<List<ReceiveAddress>> getUserAddress(@PathParam("userId") String userId){
+    public R<List<ReceiveAddress>> getUserAddress(@RequestHeader("userId") String userId){
         return R.ok("userAddressList",receiveAddressService.getAddressByUserId(userId));
     }
 }
