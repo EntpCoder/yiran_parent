@@ -92,7 +92,7 @@ public class ProductServiceImpl implements IProductService {
         if(sizeIdArr.length > 0){
             sizeList = Arrays.asList(sizeIdArr);
         }
-
+        List<ProductVO> productVOList = new ArrayList<>();
         //查询颜色和尺码在sizeIdStr,colorIdStr里面的 的pro_ids
         List<String> proIds = proAttributeInfoMapper
                 .selectList(new QueryWrapper<ProAttributeInfo>().select("pro_id").in(!CollectionUtils.isEmpty(sizeList),"size_id",sizeList).in(!CollectionUtils.isEmpty(colorList),"color_id",colorList))
@@ -101,18 +101,21 @@ public class ProductServiceImpl implements IProductService {
                 .distinct()
                 .collect(Collectors.toList());
         System.out.println(proIds);
+        if (proIds.size()>0){
         //查询pro_id在pro_ids里，并且品牌和品类为brandId，kindIdStr的商品
         List<Product> products = productMapper
                 .selectList(new QueryWrapper<Product>().in(!CollectionUtils.isEmpty(proIds),"pro_id",proIds).in(!CollectionUtils.isEmpty(kindList),"kind",kindList).eq("brand_id",brandId));
 
-        return products.stream()
-                .map(p -> {
-                    ProductVO vo = new ProductVO();
-                    BeanUtils.copyProperties(p, vo);
-                    vo.setProCount(products.size());
-                    return vo;
-                })
-                .collect(Collectors.toList());
+            productVOList = products.stream()
+                    .map(p -> {
+                        ProductVO vo = new ProductVO();
+                        BeanUtils.copyProperties(p, vo);
+                        vo.setProCount(products.size());
+                        return vo;
+                    })
+                    .collect(Collectors.toList());
+        }
+        return productVOList;
     }
 
     @Override
