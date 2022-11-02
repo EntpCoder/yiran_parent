@@ -3,6 +3,7 @@ package com.yiran.service.impl;
 import com.yiran.mapper.MultiMenuMapper;
 import com.yiran.model.entity.MultiMenu;
 import com.yiran.service.MultiMenuService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class MultiMenuServiceImpl implements MultiMenuService {
     }
 
     @Override
+    @Cacheable(value = "menu")
     public List<MultiMenu> listWithTree() {
         //1、查出所有分类
         List<MultiMenu> multiMenuList = menuMapper.selectList(null);
