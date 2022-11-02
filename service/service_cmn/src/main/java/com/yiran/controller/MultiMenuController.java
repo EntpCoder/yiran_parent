@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2022/11/1 16:09
  */
 @RestController
-@RequestMapping("/MultiMenu")
+@RequestMapping("/menu")
 public class MultiMenuController {
     private final MultiMenuService menuService;
     public MultiMenuController(MultiMenuService menuService) {
@@ -24,7 +24,7 @@ public class MultiMenuController {
      * 根据集合来查询多级菜单
      * @return 多级菜单集合
      */
-    @RequestMapping("/list/tree")
+    @RequestMapping("/getMenuTree")
     public R list(){
         List<MultiMenu> multiMenus =  menuService.listWithTree();
         return R.ok("multiMenus",multiMenus);
