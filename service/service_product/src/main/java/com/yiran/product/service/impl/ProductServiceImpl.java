@@ -131,14 +131,16 @@ public class ProductServiceImpl implements IProductService {
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("size_id","color_id").eq("pro_id",proId);
         List<ProAttributeInfo> proAttributeInfos = proAttributeInfoMapper.selectList(wrapper);
-        List<Size> sizeList = new ArrayList<>();
-        List<Color> colorList = new ArrayList<>();
+        Set<Size> sizeSet = new HashSet<>();
+        Set<Color> colorSet = new HashSet<>();
         for(ProAttributeInfo proAttributeInfo : proAttributeInfos){
             Size size = sizeMapper.selectById(proAttributeInfo.getSizeId());
-            sizeList.add(size);
+            sizeSet.add(size);
             Color color = colorMapper.selectById(proAttributeInfo.getColorId());
-            colorList.add(color);
+            colorSet.add(color);
         }
+        List<Size> sizeList = new ArrayList<>(sizeSet);
+        List<Color> colorList = new ArrayList<>(colorSet);
         productDetailVO.setSizeList(sizeList);
         productDetailVO.setColorList(colorList);
 
@@ -229,46 +231,18 @@ public class ProductServiceImpl implements IProductService {
             filtrateVO.setBrandList(brandList);
         }
         //查询数据库中size_type
-        List<String> sizeIds = sizeMapper
-                .selectList(new QueryWrapper<Size>().orderByAsc("size_id").select("size_id"))
+        List<Size> sizeList = sizeMapper
+                .selectList(new QueryWrapper<>())
                 .stream()
-                .map(Size::getSizeId)
                 .distinct()
                 .collect(Collectors.toList());
-        List<String> sizeType = sizeMapper
-                .selectList(new QueryWrapper<Size>().orderByAsc("size_id").select("size_type"))
-                .stream()
-                .map(Size::getSizeType)
-                .distinct()
-                .collect(Collectors.toList());
-        List<Size> sizeList = new ArrayList<>();
-        for (int i = 0; i<sizeIds.size(); i++){
-            Size size = new Size();
-            size.setSizeId(sizeIds.get(i));
-            size.setSizeType(sizeType.get(i));
-            sizeList.add(size);
-        }
         filtrateVO.setSizeList(sizeList);
         //查询数据库中color_name
-        List<String> colorIds = colorMapper
-                .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_id"))
+        List<Color> colorList = colorMapper
+                .selectList(new QueryWrapper<>())
                 .stream()
-                .map(Color::getColorId)
                 .distinct()
                 .collect(Collectors.toList());
-        List<String> colorName = colorMapper
-                .selectList(new QueryWrapper<Color>().orderByAsc("color_id").select("color_name"))
-                .stream()
-                .map(Color::getColorName)
-                .distinct()
-                .collect(Collectors.toList());
-        List<Color> colorList = new ArrayList<>();
-        for (int i = 0; i < colorIds.size(); i++){
-            Color color = new Color();
-            color.setColorId(colorIds.get(i));
-            color.setColorName(colorName.get(i));
-            colorList.add(color);
-        }
         filtrateVO.setColorList(colorList);
         return filtrateVO;
     }
