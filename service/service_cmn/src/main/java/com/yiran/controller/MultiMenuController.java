@@ -25,8 +25,8 @@ public class MultiMenuController {
      * @return 多级菜单集合
      */
     @RequestMapping("/list/tree")
-    public R<List<MultiMenu>> list(){
+    public R list(){
         List<MultiMenu> multiMenus =  menuService.listWithTree();
-        return multiMenus == null ? R.fail():R.ok("multiMenus",multiMenus);
+        return R.ok("multiMenus",multiMenus);
     }
 }
