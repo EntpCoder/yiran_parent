@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -54,9 +53,9 @@ public class Cart implements Serializable {
     private Integer version;
 
     @TableField(fill = FieldFill.INSERT)
-    private DateTimeLiteralExpression.DateTime createTime;
+    private LocalDateTime createTime;
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private DateTimeLiteralExpression.DateTime updateTime;
+    private LocalDateTime updateTime;
 
     private String other1;
 
