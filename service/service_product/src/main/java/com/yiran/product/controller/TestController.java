@@ -4,6 +4,7 @@ import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
+import com.yiran.model.vo.ProductInfoNumVO;
 import com.yiran.model.vo.ProductVO;
 import com.yiran.product.service.IProductService;
 import org.springframework.util.StringUtils;
@@ -60,12 +61,10 @@ public class TestController {
     }
 
     @GetMapping("getProInfoId/{proId}/{colorId}/{sizeId}")
-    public R<String> getProInfoId(@PathVariable("proId") String proId,
-                                  @PathVariable("colorId") String colorId,
-                                  @PathVariable("sizeId") String sizeId) {
-        String proInfoId = productService.getProInfoId(proId, sizeId, colorId);
-        return StringUtils.hasLength(proInfoId) ?
-                R.ok("proInfoId",proInfoId) : R.fail(ResultCodeEnum.DATA_EMPTY);
+    public R<ProductInfoNumVO> getProInfoId(@PathVariable("proId") String proId,
+                                            @PathVariable("colorId") String colorId,
+                                            @PathVariable("sizeId") String sizeId) {
+        ProductInfoNumVO productInfoNumVO = productService.getProInfoId(proId, sizeId, colorId);
+        return productInfoNumVO != null ? R.ok("result", productInfoNumVO) : R.fail();
     }
-
 }

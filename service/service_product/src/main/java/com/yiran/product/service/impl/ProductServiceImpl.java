@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.*;
 import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
+import com.yiran.model.vo.ProductInfoNumVO;
 import com.yiran.model.vo.ProductVO;
 import com.yiran.product.mapper.*;
 import com.yiran.product.service.IProductService;
@@ -31,9 +32,10 @@ public class ProductServiceImpl implements IProductService {
     private final ProImageMapper proImageMapper;
     private final BrandMapper brandMapper;
     private final MultiMenuMapper multiMenuMapper;
+    private final InventoryMapper inventoryMapper;
 
 
-    public ProductServiceImpl(ProductMapper productMapper,BrandMapper brandMapper, ProImageMapper proImageMapper,ColorMapper colorMapper, SizeMapper sizeMapper, ProAttributeInfoMapper proAttributeInfoMapper, MultiMenuMapper multiMenuMapper) {
+    public ProductServiceImpl(ProductMapper productMapper,BrandMapper brandMapper, InventoryMapper inventoryMapper,ProImageMapper proImageMapper,ColorMapper colorMapper, SizeMapper sizeMapper, ProAttributeInfoMapper proAttributeInfoMapper, MultiMenuMapper multiMenuMapper) {
         this.productMapper = productMapper;
         this.proAttributeInfoMapper = proAttributeInfoMapper;
         this.colorMapper = colorMapper;
@@ -41,6 +43,7 @@ public class ProductServiceImpl implements IProductService {
         this.proImageMapper = proImageMapper;
         this.brandMapper = brandMapper;
         this.multiMenuMapper = multiMenuMapper;
+        this.inventoryMapper = inventoryMapper;
     }
 
     @Override
@@ -255,11 +258,22 @@ public class ProductServiceImpl implements IProductService {
     }
 
     @Override
-    public String getProInfoId(String proId, String sizeId, String colorId) {
+    public ProductInfoNumVO getProInfoId(String proId, String sizeId, String colorId) {
+        ProductInfoNumVO productInfoNumVO = new ProductInfoNumVO();
+
         QueryWrapper<ProAttributeInfo> wrapper = new QueryWrapper<>();
         wrapper.select("pro_attribute_info_id").eq("pro_id",proId).eq("size_id",sizeId).eq("color_id",colorId);
         ProAttributeInfo proAttributeInfo = proAttributeInfoMapper.selectOne(wrapper);
-        return proAttributeInfo == null ? null : proAttributeInfo.getProAttributeInfoId();
+        //获取商品属性id
+        String proAttributeInfoId = proAttributeInfo.getProAttributeInfoId();
+        QueryWrapper<Inventory> wrapper1 = new QueryWrapper<>();
+        wrapper1.select("nums").eq("pro_attribute_info_id",proAttributeInfoId);
+        Inventory inventory = inventoryMapper.selectOne(wrapper1);
+        //获取商品属性的库存
+        Integer nums = inventory.getNums();
+        productInfoNumVO.setNums(nums);
+        productInfoNumVO.setProAttributeInfoId(proAttributeInfoId);
+        return productInfoNumVO;
     }
 }
 

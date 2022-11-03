@@ -2,6 +2,7 @@ package com.yiran.product.service;
 
 import com.yiran.model.vo.FiltrateVO;
 import com.yiran.model.vo.ProductDetailVO;
+import com.yiran.model.vo.ProductInfoNumVO;
 import com.yiran.model.vo.ProductVO;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public interface IProductService{
      * @param colorId 尺码id
      * @return 商品属性id
      */
-    String getProInfoId(String proId,String sizeId,String colorId);
+    ProductInfoNumVO getProInfoId(String proId, String sizeId, String colorId);
 
 
 }
