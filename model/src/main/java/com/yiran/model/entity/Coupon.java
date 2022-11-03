@@ -71,7 +71,7 @@ public class Coupon implements Serializable {
     /**
      * 使用周期限时
      */
-    private LocalDateTime timelimit;
+    private Long timelimit;
 
     /**
      * 时效类型
