@@ -17,7 +17,7 @@ import java.util.List;
  * @date 2022/10/1 20:04
  */
 @RestController
-@RequestMapping("/order")
+@RequestMapping("/order/test")
 public class TestOrderController {
     private final IOrdersService ordersService;
     private final CartClient cartClient;
