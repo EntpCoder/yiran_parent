@@ -1,7 +1,10 @@
 package com.yiran.order.service;
 
+import com.yiran.common.result.R;
 import com.yiran.model.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +16,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrdersService extends IService<Orders> {
 
+    R<Orders> createOrder(String userId, String receiveId, String[] cartIds);
+
+    /**
+     * 根据订单id查询订单
+     * @param orderId 订单
+     * @return 订单
+     */
+    Orders queryOrder(String orderId);
 }
