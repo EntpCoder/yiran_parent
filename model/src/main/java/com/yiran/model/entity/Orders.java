@@ -53,9 +53,9 @@ public class Orders implements Serializable {
     private String subject;
 
     /**
-     * 外建优惠券id
+     * 领取优惠券id
      */
-    private String couponId;
+    private String receiveCouponId;
 
     /**
      * 优惠金额
