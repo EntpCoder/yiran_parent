@@ -3,6 +3,7 @@ package com.yiran.pay.service.impl;
 import com.alibaba.fastjson2.JSONObject;
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.DefaultAlipayClient;
+import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.yiran.client.order.OrderClient;
 import com.yiran.common.result.R;
@@ -13,6 +14,7 @@ import com.yiran.pay.service.IAlipayService;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author Yang Song
@@ -54,11 +56,34 @@ public class AlipayServiceImpl implements IAlipayService {
 
     @Override
     public String callBackAsync(AlipayVo alipayVo, Map<String, String[]> params) {
-        return null;
+        // 验签
+        if (!isSign(params)){
+            // 实际业务中需要对通知中的内容进行二次校验
+            System.out.println("[验签失败]:订单Id" + alipayVo.getOut_trade_no());
+            // 只要给支付宝返回的不是success这7个字符支付宝就会再次发送通知
+            return "failure";
+        }
+        // todo rabbitMq发送消息
+        System.out.println("验签成功--发送消息");
+        System.out.println("修改订单状态");
+        System.out.println("修改库存");
+        System.out.println("生成流水");
+        return "success";
     }
 
     @Override
     public boolean isSign(Map<String, String[]> requestParams) {
-        return false;
+        // 将Map<String, String[]> 转为 Map<String, String> 多个数据用","进行拼接
+        Map<String, String> params = requestParams.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey,
+                        (entry) -> String.join(",", entry.getValue())));
+        boolean signVerified = false;
+        try {
+            // 使用支付宝SDK验签
+            signVerified = AlipaySignature.verifyV1(params, AlipayProperties.ALIPAY_PUBLIC_KEY, AlipayProperties.CHARSET, AlipayProperties.SIGN_TYPE);
+        } catch (AlipayApiException e) {
+            e.printStackTrace();
+        }
+        return signVerified;
     }
 }
