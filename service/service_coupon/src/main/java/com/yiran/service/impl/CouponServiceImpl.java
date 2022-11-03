@@ -33,7 +33,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public Boolean createCoupon(String subject, String discountAmount, String fullMoney, LocalDateTime grantStartTime, LocalDateTime grandEndTime,LocalDateTime usageStartTime,LocalDateTime usageEndTime,Long timelimit,Byte timeType, Integer quota) {
         Coupon coupon = new Coupon();
-        coupon.setCouponId("1");
         coupon.setSubject(subject);
         BigDecimal disAccount = new BigDecimal(discountAmount);
         BigDecimal fullAccount = new BigDecimal(fullMoney);
@@ -62,8 +61,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public BigDecimal getDiscountAmount(String couponId) {
-        Coupon coupon = couponMapper.selectById(couponId);
+    public BigDecimal getDiscountAmount(String receiveId) {
+        Coupon coupon = couponMapper.selectById(receiveId);
         return coupon.getDiscountAmount();
     }
 
@@ -77,5 +76,11 @@ public class CouponServiceImpl implements CouponService {
         } else{
             return false;
         }
+    }
+
+    @Override
+    public List<Coupon> getByGrantTime() {
+        LocalDateTime currentTime = LocalDateTime.now();
+        return couponMapper.selectList(new QueryWrapper<Coupon>().le("grant_start_time",currentTime).ge("grand_end_time",currentTime));
     }
 }

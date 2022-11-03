@@ -1,6 +1,7 @@
 package com.yiran.service;
 
 
+import com.yiran.model.entity.Coupon;
 import com.yiran.model.entity.ReceiveCoupon;
 
 import java.math.BigDecimal;
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface CouponService {
     /**
-     * 生成优惠券
+     * 商家生成优惠券
      * @param subject 优惠券标题
      * @param discountAmount 优惠金额
      * @param fullMoney 满减金额
@@ -32,18 +33,18 @@ public interface CouponService {
                          Long timelimit,Byte timeType,Integer quota);
 
     /**
-     * 用户查询优惠券
+     * 用户查询已领取优惠券
      * @param usrId 用户Id
      * @return 优惠券集合
      */
     List<ReceiveCoupon> getByUserId(String usrId);
 
     /**
-     * 通过优惠券id获得优惠金额
-     * @param couponId 优惠券id
+     * 通过用户优惠券id获得优惠金额
+     * @param receiveId 优惠券id
      * @return 优惠金额
      */
-    BigDecimal getDiscountAmount(String couponId);
+    BigDecimal getDiscountAmount(String receiveId);
 
     /**
      * 根据订单id  改优惠券状态
@@ -51,4 +52,10 @@ public interface CouponService {
      * @return 优惠券状态
      */
     Boolean updateCouponStatus(String orderId);
+
+    /**
+     * 优惠券领取页面  根据是否在发放时间内查询可领取优惠券
+     * @return 可领取优惠券id
+     */
+    List<Coupon> getByGrantTime();
 }

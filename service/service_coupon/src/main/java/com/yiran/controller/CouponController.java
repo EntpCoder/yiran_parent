@@ -2,6 +2,7 @@ package com.yiran.controller;
 
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
+import com.yiran.model.entity.Coupon;
 import com.yiran.model.entity.ReceiveCoupon;
 import com.yiran.service.CouponService;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +26,7 @@ public class CouponController {
 
     /**
      *
-     * 生成优惠券
+     * 商家生成优惠券
      * @param subject 优惠券标题
      * @param discountAmount 优惠金额
      * @param fullMoney 满减金额
@@ -47,7 +48,7 @@ public class CouponController {
                 usageStartTime,usageEndTime,timelimit,timeType,quota)? R.ok("创建成功",true):R.fail(ResultCodeEnum.FAIL);
     }
     /**
-     * 用户查询优惠券
+     * 用户查询已领取优惠券
      * @param userId 用户Id
      * @return 优惠券集合
      */
@@ -76,4 +77,13 @@ public class CouponController {
         return couponService.updateCouponStatus(orderId) ? R.ok("isUpdate",true):R.fail(ResultCodeEnum.FAIL);
     }
 
+    /**
+     * 优惠券领取页面  根据是否在发放时间内查询可领取优惠券
+     * @return 可领取优惠券id
+     */
+    @GetMapping("/getByGrantTime")
+    public R<List<Coupon>> getByGrantTime(){
+        List<Coupon> couponList = couponService.getByGrantTime();
+        return couponList.size() > 0 ? R.ok("couponList",couponList):R.fail(ResultCodeEnum.FAIL);
+    }
 }
