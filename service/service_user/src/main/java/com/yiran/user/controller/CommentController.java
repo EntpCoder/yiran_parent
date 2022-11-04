@@ -24,12 +24,7 @@ public class CommentController {
         List<Comments> commentsList=commentsService.selectbyproId(proId);
         return commentsList==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok ",commentsList);
     }
-    @GetMapping("/selectByUserId/{userId}")
-    public R<List<Comments>> selectByUserId(@PathVariable("userId") String userId){
-        List<Comments> commentsList=commentsService.selectbyUserId(userId);
-        return commentsList==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok",commentsList);
-    }
-    @PostMapping("addComment")
+    @PostMapping("/addComment")
     public R<Boolean> addComment(@RequestHeader("userId") String userId,String proId,String content,String addr,Float describe,Float service,Float logisties){
         return commentsService.addComment(userId,proId,content,addr,describe,service,logisties)?R.ok("ok",true):R.fail(ResultCodeEnum.FAIL);
     }
