@@ -59,12 +59,12 @@ public class CouponController {
     }
     /**
      * 通过优惠券id获得优惠金额
-     * @param couponId 优惠券id
+     * @param receiveId 优惠券id
      * @return 优惠金额
      */
-    @GetMapping("/getDiscountAmount/{couponId}")
-    public R<BigDecimal> getDiscountAmount(@PathVariable("couponId") String couponId){
-        BigDecimal discountAmount = couponService.getDiscountAmount(couponId);
+    @GetMapping("/getDiscountAmount/{receiveId}")
+    public R<BigDecimal> getDiscountAmount(@PathVariable("receiveId") String receiveId){
+        BigDecimal discountAmount = couponService.getDiscountAmount(receiveId);
         return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
     }
     /**

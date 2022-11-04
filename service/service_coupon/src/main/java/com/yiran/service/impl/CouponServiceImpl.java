@@ -62,7 +62,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public BigDecimal getDiscountAmount(String receiveId) {
-        Coupon coupon = couponMapper.selectById(receiveId);
+
+        ReceiveCoupon reCoupon = receiveCoupon.selectById(receiveId);
+        Coupon coupon = couponMapper.selectById(reCoupon.getCouponId());
         return coupon.getDiscountAmount();
     }
 
