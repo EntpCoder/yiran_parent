@@ -15,8 +15,15 @@ import java.util.List;
  * @since 2022-10-03
  */
 public interface IOrdersService extends IService<Orders> {
-
-    R<Orders> createOrder(String userId, String receiveId, String[] cartIds);
+    /**
+     * 生成订单id 需要参数
+     * @param userId 用户id
+     * @param receiveId 地址id
+     * @param receiveCouponId 优惠券id
+     * @param cartIds 购物车集合
+     * @return 订单
+     */
+    String createOrder(String userId, String receiveId,String receiveCouponId, String[] cartIds);
 
     /**
      * 根据订单id查询订单

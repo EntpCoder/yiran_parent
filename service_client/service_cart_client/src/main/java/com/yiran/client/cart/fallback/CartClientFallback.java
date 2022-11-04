@@ -23,4 +23,9 @@ public class CartClientFallback implements CartClient {
         System.out.println("回调");
         return null;
     }
+
+    @Override
+    public R<Boolean> deleteAddCart(String[] cartIds) {
+        return null;
+    }
 }
