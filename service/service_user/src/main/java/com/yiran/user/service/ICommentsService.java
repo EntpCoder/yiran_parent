@@ -26,7 +26,7 @@ public interface ICommentsService extends IService<Comments> {
      * 用户添加评论
      * @param userId 用户id
      * @param proId 商品id
-     * @param centent 评论内容
+     * @param content 评论内容
      * @param imgAddr 图片
      * @param describe 描述分
      * @param service 服务分
