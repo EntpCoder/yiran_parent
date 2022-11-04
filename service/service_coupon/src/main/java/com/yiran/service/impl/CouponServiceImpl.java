@@ -63,10 +63,13 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public BigDecimal consumeCoupon(String receiveId) {
         ReceiveCoupon reCoupon = receiveCouponMapper.selectById(receiveId);
-        reCoupon.setStatus((byte) 1);
-        receiveCouponMapper.updateById(reCoupon);
-        Coupon coupon = couponMapper.selectById(reCoupon.getCouponId());
-        return coupon.getDiscountAmount();
+        if (reCoupon.getStatus()==(byte) 0){
+            reCoupon.setStatus((byte) 1);
+            Coupon coupon = couponMapper.selectById(reCoupon.getCouponId());
+            return coupon.getDiscountAmount();
+        } else{
+            return new BigDecimal(0);
+        }
     }
 
     @Override
@@ -82,7 +85,8 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> getByGrantTime() {
+    public List<Coupon> getCouponList() {
+        //加载所有有效的优惠券
         LocalDateTime currentTime = LocalDateTime.now();
         return couponMapper.selectList(new QueryWrapper<Coupon>().le("grant_start_time",currentTime).ge("grand_end_time",currentTime));
     }

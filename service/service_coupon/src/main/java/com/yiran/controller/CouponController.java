@@ -78,12 +78,12 @@ public class CouponController {
     }
 
     /**
-     * 优惠券领取页面  根据是否在发放时间内查询可领取优惠券
-     * @return 可领取优惠券id
+     * 查询可领取优惠券
+     * @return 可领取优惠券列表
      */
-    @GetMapping("/getByGrantTime")
-    public R<List<Coupon>> getByGrantTime(){
-        List<Coupon> couponList = couponService.getByGrantTime();
+    @GetMapping("/getCouponList")
+    public R<List<Coupon>> getCouponList(){
+        List<Coupon> couponList = couponService.getCouponList();
         return couponList.size() > 0 ? R.ok("couponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
 }

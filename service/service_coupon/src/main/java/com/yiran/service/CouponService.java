@@ -54,10 +54,10 @@ public interface CouponService {
     Boolean updateCouponStatus(String orderId);
 
     /**
-     * 优惠券领取页面  根据是否在发放时间内查询可领取优惠券
-     * @return 可领取优惠券id
+     * 查询可领取优惠券
+     * @return 可领取优惠券列表
      */
-    List<Coupon> getByGrantTime();
+    List<Coupon> getCouponList();
 
 
 }
