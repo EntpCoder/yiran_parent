@@ -21,12 +21,12 @@ import java.util.List;
 @Service
 public class CouponServiceImpl implements CouponService {
     private final CouponMapper couponMapper;
-    private final ReceiveCouponMapper receiveCoupon;
+    private final ReceiveCouponMapper receiveCouponMapper;
     private final OrdersMapper ordersMapper;
 
-    public CouponServiceImpl(CouponMapper couponMapper, ReceiveCouponMapper receiveCoupon, OrdersMapper ordersMapper) {
+    public CouponServiceImpl(CouponMapper couponMapper, ReceiveCouponMapper receiveCouponMapper, OrdersMapper ordersMapper) {
         this.couponMapper = couponMapper;
-        this.receiveCoupon = receiveCoupon;
+        this.receiveCouponMapper = receiveCouponMapper;
         this.ordersMapper = ordersMapper;
     }
 
@@ -57,13 +57,14 @@ public class CouponServiceImpl implements CouponService {
     public List<ReceiveCoupon> getByUserId(String usrId) {
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",usrId);
-        return receiveCoupon.selectList(queryWrapper);
+        return receiveCouponMapper.selectList(queryWrapper);
     }
 
     @Override
-    public BigDecimal getDiscountAmount(String receiveId) {
-
-        ReceiveCoupon reCoupon = receiveCoupon.selectById(receiveId);
+    public BigDecimal consumeCoupon(String receiveId) {
+        ReceiveCoupon reCoupon = receiveCouponMapper.selectById(receiveId);
+        reCoupon.setStatus((byte) 1);
+        receiveCouponMapper.updateById(reCoupon);
         Coupon coupon = couponMapper.selectById(reCoupon.getCouponId());
         return coupon.getDiscountAmount();
     }
@@ -71,10 +72,10 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public Boolean updateCouponStatus(String orderId) {
         Orders order = ordersMapper.selectById(orderId);
-        ReceiveCoupon reCoupon = receiveCoupon.selectById(order.getReceiveCouponId());
+        ReceiveCoupon reCoupon = receiveCouponMapper.selectById(order.getReceiveCouponId());
         if (reCoupon.getStatus()==(byte) 0){
             reCoupon.setStatus((byte) 1);
-            return receiveCoupon.updateById(reCoupon) > 0;
+            return receiveCouponMapper.updateById(reCoupon) > 0;
         } else{
             return false;
         }

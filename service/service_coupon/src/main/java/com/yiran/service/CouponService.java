@@ -40,11 +40,11 @@ public interface CouponService {
     List<ReceiveCoupon> getByUserId(String usrId);
 
     /**
-     * 通过用户优惠券id获得优惠金额
+     * 通过用户优惠券id 消费优惠券
      * @param receiveId 优惠券id
      * @return 优惠金额
      */
-    BigDecimal getDiscountAmount(String receiveId);
+    BigDecimal consumeCoupon(String receiveId);
 
     /**
      * 根据订单id  改优惠券状态
@@ -58,4 +58,6 @@ public interface CouponService {
      * @return 可领取优惠券id
      */
     List<Coupon> getByGrantTime();
+
+
 }

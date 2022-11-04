@@ -58,13 +58,13 @@ public class CouponController {
         return couponList.size()> 0 ? R.ok("CouponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
     /**
-     * 通过优惠券id获得优惠金额
+     * 消费优惠券
      * @param receiveId 优惠券id
      * @return 优惠金额
      */
-    @GetMapping("/getDiscountAmount/{receiveId}")
+    @GetMapping("/consumeCoupon/{receiveId}")
     public R<BigDecimal> getDiscountAmount(@PathVariable("receiveId") String receiveId){
-        BigDecimal discountAmount = couponService.getDiscountAmount(receiveId);
+        BigDecimal discountAmount = couponService.consumeCoupon(receiveId);
         return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
     }
     /**
