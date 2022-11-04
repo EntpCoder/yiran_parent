@@ -53,7 +53,7 @@ public class CartController {
      * @param cartIds 购物车id
      * @return R
      */
-    @DeleteMapping("/deleteAddCart")
+    @PostMapping("/deleteAddCart")
     public R<Boolean> deleteAddCart(String[] cartIds){
         return cartService.deleteCartByIds(cartIds) ? R.ok("isDelete",true):R.fail(ResultCodeEnum.FAIL);
     }
