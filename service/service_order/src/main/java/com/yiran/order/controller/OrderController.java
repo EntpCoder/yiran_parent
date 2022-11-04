@@ -1,12 +1,10 @@
 package com.yiran.order.controller;
 
-import com.yiran.client.cart.CartClient;
 import com.yiran.common.result.R;
 import com.yiran.model.entity.Orders;
 import com.yiran.order.service.IOrdersService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 /**
  * @Author 小番茄
@@ -34,10 +32,6 @@ public class OrderController {
     public R<String> createOrder(@RequestHeader("userId") String userId,
                                  String receiveId,
                                  String receiveCouponId, String[] cartIds) {
-        System.out.println(userId);
-        System.out.println(receiveId);
-        System.out.println(receiveCouponId);
-        System.out.println(cartIds);
         return R.ok("orderId", ordersService.createOrder(userId, receiveId, receiveCouponId, cartIds));
     }
 
