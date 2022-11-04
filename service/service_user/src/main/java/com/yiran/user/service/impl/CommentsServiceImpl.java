@@ -3,11 +3,15 @@ package com.yiran.user.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yiran.user.mapper.CommentsMapper;
+import com.yiran.model.entity.User;
+import com.yiran.model.vo.CommentVo;
+import com.yiran.user.mapper.*;
 import com.yiran.user.service.ICommentsService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,16 +25,43 @@ import java.util.List;
 @Service
 public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> implements ICommentsService {
     private final CommentsMapper commentsMapper;
+    private final UserMapper userMapper;
 
-    public CommentsServiceImpl(CommentsMapper commentsMapper) {
+
+    public CommentsServiceImpl(CommentsMapper commentsMapper, UserMapper userMapper) {
         this.commentsMapper = commentsMapper;
+        this.userMapper = userMapper;
     }
 
     @Override
-    public List<Comments> selectbyproId(String proId) {
+    public List<CommentVo> selectbyproId(String proId) {
+        List<CommentVo> commentVoList=new ArrayList<>();
         QueryWrapper<Comments> queryWrapper=new QueryWrapper<>();
         queryWrapper.eq("pro_id",proId);
-        return commentsMapper.selectList(queryWrapper);
+        List<Comments> commentsList=commentsMapper.selectList(queryWrapper);
+
+        for (Comments c:commentsList
+             ) {
+            CommentVo commentVo=new CommentVo();
+            BeanUtils.copyProperties(c,commentVo);
+            //商品评分的平均分
+            //不能直接加减。这里用add()函数
+            BigDecimal num=new BigDecimal(3);
+            BigDecimal describeScore=c.getDescribeScore();
+            BigDecimal serviceScore=c.getServiceScore();
+            BigDecimal logisticsScore=c.getLogisticsScore();
+            BigDecimal score1=describeScore.add(serviceScore);
+            BigDecimal score2=score1.add(logisticsScore);
+            BigDecimal avgScore=score2.divide(num);
+            commentVo.setSatisfactionScore(avgScore);
+            commentVo.setCreateTime(c.getTime());
+            //找出评论这个商品的用户
+            User user=userMapper.selectById(c.getUserId());
+            commentVo.setUserName(user.getUsername());
+            commentVo.setImage(user.getImage());
+            commentVoList.add(commentVo);
+        }
+        return commentVoList;
     }
 
     @Override

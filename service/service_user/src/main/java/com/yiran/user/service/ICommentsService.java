@@ -2,6 +2,7 @@ package com.yiran.user.service;
 
 import com.yiran.model.entity.Comments;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yiran.model.vo.CommentVo;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface ICommentsService extends IService<Comments> {
      * @param proId 商品Id
      * @return 商品列表
      */
-    List<Comments> selectbyproId(String proId);
+    List<CommentVo> selectbyproId(String proId);
 
 
     /**

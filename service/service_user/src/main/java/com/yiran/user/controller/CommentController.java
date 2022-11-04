@@ -3,6 +3,7 @@ package com.yiran.user.controller;
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.Comments;
+import com.yiran.model.vo.CommentVo;
 import com.yiran.user.service.ICommentsService;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +21,8 @@ public class CommentController {
         this.commentsService = commentsService;
     }
     @GetMapping("/selectbyproId/{proId}")
-    public R<List<Comments>> selectbyproId(@PathVariable("proId") String proId){
-        List<Comments> commentsList=commentsService.selectbyproId(proId);
+    public R<List<CommentVo>> selectbyproId(@PathVariable("proId") String proId){
+        List<CommentVo> commentsList=commentsService.selectbyproId(proId);
         return commentsList==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok ",commentsList);
     }
     @PostMapping("/addComment")
