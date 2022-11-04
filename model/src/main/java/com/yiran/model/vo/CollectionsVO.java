@@ -37,6 +37,11 @@ public class CollectionsVO {
      */
     private String brandId;
     /**
+     *
+     * 品牌名称
+     */
+    private String brandName;
+    /**
      * 商品描述
      */
     @TableField("`describe`")

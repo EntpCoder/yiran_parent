@@ -64,5 +64,4 @@ public interface IProductService{
      */
     ProductInfoNumVO getProInfoId(String proId, String sizeId, String colorId);
 
-
 }

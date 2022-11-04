@@ -1,6 +1,5 @@
 package com.yiran.product.service;
 
-import com.yiran.model.entity.Collections;
 import com.yiran.model.vo.CollectionsVO;
 
 import java.util.List;
@@ -13,17 +12,30 @@ public interface CollServicel {
     /**
      *根据用户的id查看个人收藏
      * @param userId 用户id
+     * @return List
      */
     List<CollectionsVO> getUserCollections(String userId);
 
     /**
-     * 根据商品的id来新增
-     * @param collections 购物车
+     * 添加收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否收藏成功 boolean
      */
-    Boolean increaseCollections(Collections collections);
+    Boolean increaseCollections(String proId,String userId);
     /**
-     * 根据收场的id来取消收藏
-     * @param collectionId 收藏id
+     * 取消收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否取消收藏成功 boolean
      */
-    Boolean deleCollerticon(String collectionId);
+    Boolean deleCollerticon(String proId,String userId);
+
+    /**
+     * 查询用户是否收藏商品
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return boolean
+     */
+    Boolean chaxun(String proId,String userId);
 }

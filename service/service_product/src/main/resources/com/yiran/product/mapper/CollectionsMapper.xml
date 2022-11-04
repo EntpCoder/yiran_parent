@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yiran.product.mapper.CollectionsMapper">
+    <delete id="deleteByUserByPro">
+        delete from collections where user_id = #{userId} and pro_id = #{proId};
+    </delete>
+    <resultMap id="aaa" type="com.yiran.model.entity.Collections">
+        <id column="collection_id" property="collectionId"></id>
+        <result column="user_id" property="userId"></result>
+        <result column="pro_id" property="proId"></result>
+        <result column="is_delete" property="isDelete"></result>
+    </resultMap>
+    <select id="selectCollection" resultMap="aaa">
+        select collection_id,user_id,pro_id,is_delete from collections where pro_id = #{proId} and user_id = #{userId}
+    </select>
+</mapper>

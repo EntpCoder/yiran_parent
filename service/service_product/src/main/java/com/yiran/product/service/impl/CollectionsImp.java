@@ -1,7 +1,9 @@
 package com.yiran.product.service.impl;
 
 
+import com.yiran.model.entity.Brand;
 import com.yiran.model.entity.Product;
+import com.yiran.product.mapper.BrandMapper;
 import com.yiran.product.mapper.ProductMapper;
 import org.springframework.beans.BeanUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -24,10 +26,12 @@ public class CollectionsImp implements CollServicel {
 
     private final CollectionsMapper collectionsMapper;
     private final ProductMapper productMapper;
+    private final BrandMapper brandMapper;
 
-    public CollectionsImp(CollectionsMapper collectionsMapper, ProductMapper productMapper) {
+    public CollectionsImp(CollectionsMapper collectionsMapper, ProductMapper productMapper,BrandMapper brandMapper) {
         this.collectionsMapper = collectionsMapper;
         this.productMapper = productMapper;
+        this.brandMapper = brandMapper;
     }
 
     /**
@@ -50,29 +54,49 @@ public class CollectionsImp implements CollServicel {
             BeanUtils.copyProperties(c,collectionsVO);
             //根据商品的信息表中的商品来去查商id
             Product product = productMapper.selectById(c.getProId());
+            Brand brand = brandMapper.selectById(product.getBrandId());
+            String brandName = brand.getBrandName();
             BeanUtils.copyProperties(product,collectionsVO);
+            collectionsVO.setBrandName(brandName);
+            collectionsVOS.add(collectionsVO);
         }
         return collectionsVOS;
     }
 
     /**
-     * 根据商品的id来新增
-     * @param collections 购物车
-     * @return 返回R
+     * 添加收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否收藏成功 boolean
      */
     @Override
-    public Boolean increaseCollections(Collections collections){
-        return collectionsMapper.insert(collections) >0;
+    public Boolean increaseCollections(String proId,String userId){
+        Collections collections = new Collections();
+            collections.setProId(proId);
+            collections.setUserId(userId);
+            return collectionsMapper.insert(collections)>0;
     }
 
     /**
-     * 根据收场的id来取消收藏
-     * @param collectionId 收藏id
-     * @return 返回R
-     * */
+     * 取消收藏,删除收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否取消收藏成功 boolean
+     */
     @Override
-    public Boolean deleCollerticon(String collectionId){
-        return collectionsMapper.deleteById(collectionId) > 0 ;
+    public Boolean deleCollerticon(String proId,String userId){
+        return collectionsMapper.deleteByUserByPro(userId, proId);
     }
 
+    /**
+     * 判断商品是否被收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return boolean
+     */
+    @Override
+    public Boolean chaxun(String proId, String userId) {
+        Collections collection = collectionsMapper.selectCollection(proId, userId);
+        return collection != null;
+    }
 }

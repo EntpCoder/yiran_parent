@@ -25,30 +25,44 @@ public class CollectionsController {
      * @param userId 用户id
      * @return 返回封装的CollectionsVO集合
      */
-    @GetMapping("/userCollection/{userId}")
-    public R<List<CollectionsVO>> userCollection(@PathVariable("userId") String userId){
+    @GetMapping("/userCollection")
+    public R<List<CollectionsVO>> userCollection(@RequestHeader("userId") String userId){
         List<CollectionsVO> collectionsVOList = collServicel.getUserCollections(userId);
         return collectionsVOList == null ? R.fail():R.ok("collectionsVOList",collectionsVOList);
     }
 
     /**
-     * 根据商品的id来新增
-     * @param collections 购物车
-     * @return 返回R
+     * 添加收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否收藏成功 boolean
      */
     @PostMapping("/increaseCollections")
-    public R<Boolean> increaseCollections(Collections collections){
-        return collServicel.increaseCollections(collections) ? R.fail(ResultCodeEnum.FAIL):R.ok("isDelete",true);
+    public R<Boolean> increaseCollections(String proId,@RequestHeader("userId") String userId){
+        return collServicel.increaseCollections(proId,userId) ? R.ok("isDelete",false):R.fail(ResultCodeEnum.FAIL);
     }
 
     /**
-     * 根据收场的id来取消收藏
-     * @param collectionId 收藏id
-     * @return 返回R
-     * */
+     * 取消收藏
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return 是否收藏成功 boolean
+     */
     @DeleteMapping("/deletCollection")
-    public R<Boolean> deletCollection(String collectionId){
-        return collServicel.deleCollerticon(collectionId) ? R.fail(ResultCodeEnum.FAIL): R.ok("isDelete",true);
+    public R<Boolean> deletCollection(String proId,@RequestHeader("userId") String userId){
+        return collServicel.deleCollerticon(proId,userId) ?R.ok("isDelete",true) :R.fail(ResultCodeEnum.FAIL);
     }
+
+    /**
+     * 检查用户是否已经收藏商品
+     * @param proId 商品id
+     * @param userId 用户id
+     * @return boolean
+     */
+    @GetMapping("/chaxun")
+    public R<Boolean> chaxun(String proId,@RequestHeader("userId") String userId){
+        return collServicel.chaxun(proId,userId)?R.ok("iscollect",true):R.fail(ResultCodeEnum.FAIL);
+    }
+
 
 }
