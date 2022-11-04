@@ -21,12 +21,6 @@ public interface ICommentsService extends IService<Comments> {
      */
     List<Comments> selectbyproId(String proId);
 
-    /**
-     * 根据用户id查找评论
-     * @param userId 用户id
-     * @return 商品列表
-     */
-    List<Comments> selectbyUserId(String userId);
 
     /**
      * 用户添加评论

@@ -34,12 +34,6 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
     }
 
     @Override
-    public List<Comments> selectbyUserId(String userId) {
-        QueryWrapper<Comments> queryWrapper=new QueryWrapper<>();
-        queryWrapper.eq("user_id",userId);
-        return commentsMapper.selectList(queryWrapper);
-    }
-    @Override
     public Boolean addComment(String userId,String proId,String content,String imgAddr,Float describe,Float service,Float logisties){
         Comments comment=new Comments();
         BigDecimal score1=new BigDecimal(describe);
