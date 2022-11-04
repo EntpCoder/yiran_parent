@@ -25,6 +25,7 @@
         <module>service_task</module>
         <module>service_user</module>
         <module>service_coupon</module>
+        <module>service_es</module>
     </modules>
 
     <properties>
