@@ -59,5 +59,18 @@ public interface CouponService {
      */
     List<Coupon> getCouponList();
 
+    /**
+     * 用户抢优惠券
+     * @param couponId 优惠券id
+     * @param userId 用户id
+     * @return 抢到的优惠券
+     */
+    ReceiveCoupon getReceiveCoupon(String couponId,String userId);
 
+    /**
+     * 通过用户优惠券id 查询优惠金额
+     * @param receiveId 用户优惠券id
+     * @return 优惠金额
+     */
+    BigDecimal getDiscountAmount(String receiveId);
 }

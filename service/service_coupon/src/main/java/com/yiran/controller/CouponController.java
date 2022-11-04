@@ -86,4 +86,26 @@ public class CouponController {
         List<Coupon> couponList = couponService.getCouponList();
         return couponList.size() > 0 ? R.ok("couponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
+
+    /**
+     * 用户抢优惠券
+     * @param couponId 优惠券id
+     * @param userId 用户id
+     * @return 抢到的优惠券
+     */
+    @GetMapping("/getReceiveCoupon")
+    public R<ReceiveCoupon> getReceiveCoupon(String couponId,@RequestHeader("userId") String userId){
+        ReceiveCoupon receiveCoupon = couponService.getReceiveCoupon(couponId,userId);
+        return receiveCoupon.getReceiveId() !=null ? R.ok("receiveCoupon",receiveCoupon):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 通过用户优惠券id 查询优惠金额
+     * @param receiveId 用户优惠券id
+     * @return 优惠金额
+     */
+    @GetMapping("/getDiscountAmount/{receiveId}")
+    public R<BigDecimal> getAmount(@PathVariable("receiveId") String receiveId){
+        BigDecimal discountAmount = couponService.getDiscountAmount(receiveId);
+        return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
+    }
 }
