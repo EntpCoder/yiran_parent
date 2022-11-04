@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -99,4 +100,6 @@ public class Orders implements Serializable {
     private String other1;
 
     private String other2;
+    @TableField(exist = false)
+    private List<OrderDetails> orderDetails;
 }

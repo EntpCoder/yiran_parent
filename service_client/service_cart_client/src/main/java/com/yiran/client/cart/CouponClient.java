@@ -18,6 +18,11 @@ import java.util.List;
 @FeignClient(name = "service-coupon")
 @Component
 public interface CouponClient {
+    /**
+     * 远程调用 消费优惠券
+     * @param receiveId 领取优惠券id
+     * @return 优惠金额
+     */
     @GetMapping("/coupon/consumeCoupon/{receiveId}")
     R<BigDecimal> getDiscountAmount(@PathVariable("receiveId") String receiveId);
 }

@@ -55,6 +55,14 @@ public class OrderDetails implements Serializable {
      * 商品价格
      */
     private BigDecimal proPrice;
+    /**
+     * 商品尺寸
+     */
+    private String sizeType;
+    /**
+     * 商品颜色
+     */
+    private String colorName;
 
     /**
      * 商品主图片

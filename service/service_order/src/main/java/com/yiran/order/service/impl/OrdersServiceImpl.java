@@ -1,5 +1,6 @@
 package com.yiran.order.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.client.cart.CartClient;
 import com.yiran.client.cart.CouponClient;
 import com.yiran.common.result.R;
@@ -111,5 +112,16 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     @Override
     public Orders queryOrder(String orderId){
         return ordersMapper.selectById(orderId);
+    }
+
+    @Override
+    public Orders getOrderAndDetails(String orderId) {
+        // 查询订单和订单详情
+        Orders orders = ordersMapper.selectById(orderId);
+        QueryWrapper<OrderDetails> orderDetailsQueryWrapper = new QueryWrapper<>();
+        orderDetailsQueryWrapper.eq("order_id",orderId);
+        List<OrderDetails> orderDetails = orderDetailsMapper.selectList(orderDetailsQueryWrapper);
+        orders.setOrderDetails(orderDetails);
+        return orders;
     }
 }

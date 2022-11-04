@@ -1,9 +1,13 @@
 package com.yiran.order.controller;
 
 import com.yiran.common.result.R;
+import com.yiran.common.result.ResultCodeEnum;
+import com.yiran.model.entity.OrderDetails;
 import com.yiran.model.entity.Orders;
 import com.yiran.order.service.IOrdersService;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -44,5 +48,16 @@ public class OrderController {
     @GetMapping("/queryOrder/{orderId}")
     public R<Orders> queryOrder(@PathVariable("orderId") String orderId) {
         return R.ok("order", ordersService.queryOrder(orderId));
+    }
+
+    /**
+     * 根据订单号获取订单详情
+     *
+     * @return 订单详情
+     */
+    @GetMapping("/getOrderAndDetail/{orderId}")
+    public R<Orders> getOrderDetails(@PathVariable("orderId") String orderId) {
+        Orders orders = ordersService.getOrderAndDetails(orderId);
+        return orders == null ? R.fail(ResultCodeEnum.DATA_EMPTY) : R.ok("order", orders);
     }
 }

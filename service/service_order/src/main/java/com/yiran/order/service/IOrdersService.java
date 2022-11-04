@@ -1,6 +1,7 @@
 package com.yiran.order.service;
 
 import com.yiran.common.result.R;
+import com.yiran.model.entity.OrderDetails;
 import com.yiran.model.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -31,4 +32,11 @@ public interface IOrdersService extends IService<Orders> {
      * @return 订单
      */
     Orders queryOrder(String orderId);
+
+    /**
+     * 根据订单id查询订单详情
+     * @param orderId 订单id
+     * @return 订单详情
+     */
+    Orders getOrderAndDetails(String orderId);
 }
