@@ -61,7 +61,7 @@ public class CollectionsController {
      */
     @GetMapping("/chaxun")
     public R<Boolean> chaxun(String proId,@RequestHeader("userId") String userId){
-        return collServicel.chaxun(proId,userId)?R.ok("iscollect",true):R.fail(ResultCodeEnum.FAIL);
+        return collServicel.chaxun(proId,userId)?R.ok("iscollect",true):R.ok("iscollect",false);
     }
 
 
