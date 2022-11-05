@@ -39,13 +39,15 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
     private final OrdersMapper ordersMapper;
     private final OrderDetailsMapper orderDetailsMapper;
     private final FlowMapper flowMapper;
+    private final InventoryMapper inventoryMapper;
     private final CartClient cartClient;
     private final CouponClient couponClient;
 
-    public OrdersServiceImpl(OrdersMapper ordersMapper, OrderDetailsMapper orderDetailsMapper, FlowMapper flowMapper, CartClient cartClient, CouponClient couponClient) {
+    public OrdersServiceImpl(OrdersMapper ordersMapper, OrderDetailsMapper orderDetailsMapper, FlowMapper flowMapper, CartClient cartClient, CouponClient couponClient,InventoryMapper inventoryMapper) {
         this.ordersMapper = ordersMapper;
         this.orderDetailsMapper = orderDetailsMapper;
         this.flowMapper = flowMapper;
+        this.inventoryMapper = inventoryMapper;
         this.cartClient = cartClient;
         this.couponClient = couponClient;
     }
@@ -106,14 +108,17 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         //商品的数量
         orders.setProNum(proNum);
         ordersMapper.insert(orders);
-        //在生成订单的同时生成商品详情
+        //在生成订单的同时生成订单详情
         for(CartVO c:cartList){
+            // 生成订单详情
             OrderDetails orderDetails = new OrderDetails();
             orderDetails.setOrderId(orders.getOrderId());
             orderDetails.setProPrice(c.getSellingPrice());
             orderDetails.setProNum(c.getNums());
             BeanUtils.copyProperties(c,orderDetails);
             orderDetailsMapper.insert(orderDetails);
+            // 扣减库存
+            inventoryMapper.deductInventory(c.getProAttributeInfoId(),c.getNums());
         }
         //远程调用生成订单删除购物车
         cartClient.deleteAddCart(cartIds);
@@ -134,6 +139,11 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setOrderDetails(orderDetails);
         return orders;
     }
+
+    /**
+     * 修改订单状态
+     * @param alipayVo 支付宝返回的信息
+     */
     @RabbitListener(queues = "#{orderPayStatusQueue.name}")
     public void orderPayStatus(AlipayVo alipayVo){
         System.out.println("收到消息：修改订单状态---"+alipayVo);
@@ -142,6 +152,11 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.setOrderState(new Byte("1"));
         ordersMapper.updateById(orders);
     }
+
+    /**
+     * 创建流水
+     * @param alipayVo 支付宝返回的信息
+     */
     @RabbitListener(queues = "#{flowCreateQueue.name}")
     public void flowCreate(AlipayVo alipayVo){
         System.out.println("收到消息：创建流水---"+alipayVo);
