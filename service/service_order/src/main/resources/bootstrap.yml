@@ -18,3 +18,5 @@ spring:
             group: COMMON_GROUP
           - data-id: mybatis-plus.yml
             group: COMMON_GROUP
+          - data-id: rabbitmq.yml
+            group: COMMON_GROUP

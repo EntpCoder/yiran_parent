@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.io.Serializable;
+
 /**
  * 接收支付宝回调实体类
  * @author Yang Song
@@ -14,7 +16,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class AlipayVo {
+public class AlipayVo implements Serializable {
     /**
      * 支付宝交易号
      */

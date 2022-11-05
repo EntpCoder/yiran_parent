@@ -1,6 +1,6 @@
 package com.yiran.order.mapper;
 
-import com.yiran.model.entity.OrderDetails;
+import com.yiran.model.entity.Flow;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,6 +13,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @since 2022-10-03
  */
 @Mapper
-public interface OrderDetailsMapper extends BaseMapper<OrderDetails> {
+public interface FlowMapper extends BaseMapper<Flow> {
 
 }

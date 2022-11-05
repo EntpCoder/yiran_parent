@@ -14,3 +14,5 @@ spring:
         shared-configs:
           - data-id: cloud.yml
             group: COMMON_GROUP
+          - data-id: rabbitmq.yml
+            group: COMMON_GROUP

@@ -6,11 +6,11 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.internal.util.AlipaySignature;
 import com.alipay.api.request.AlipayTradePagePayRequest;
 import com.yiran.client.order.OrderClient;
-import com.yiran.common.result.R;
 import com.yiran.model.entity.Orders;
 import com.yiran.model.vo.AlipayVo;
 import com.yiran.pay.config.AlipayProperties;
 import com.yiran.pay.service.IAlipayService;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
 public class AlipayServiceImpl implements IAlipayService {
     private final DefaultAlipayClient client;
     private final OrderClient orderClient;
+    private final RabbitTemplate rabbitTemplate;
 
-    public AlipayServiceImpl(DefaultAlipayClient client, OrderClient orderClient) {
+    public AlipayServiceImpl(DefaultAlipayClient client, OrderClient orderClient,RabbitTemplate rabbitTemplate) {
         this.client = client;
         this.orderClient = orderClient;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @Override
@@ -63,11 +65,8 @@ public class AlipayServiceImpl implements IAlipayService {
             // 只要给支付宝返回的不是success这7个字符支付宝就会再次发送通知
             return "failure";
         }
-        // todo rabbitMq发送消息
         System.out.println("验签成功--发送消息");
-        System.out.println("修改订单状态");
-        System.out.println("修改库存");
-        System.out.println("生成流水");
+        rabbitTemplate.convertAndSend("yiran.order.topic","order.pay.finish",alipayVo);
         return "success";
     }
 

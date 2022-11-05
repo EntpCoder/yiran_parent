@@ -1,16 +1,23 @@
 package com.yiran.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yiran.client.cart.CartClient;
 import com.yiran.client.cart.CouponClient;
 import com.yiran.common.result.R;
+import com.yiran.model.entity.Flow;
+import com.yiran.model.entity.Inventory;
 import com.yiran.model.entity.OrderDetails;
 import com.yiran.model.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yiran.model.vo.AlipayVo;
 import com.yiran.model.vo.CartVO;
+import com.yiran.order.mapper.FlowMapper;
+import com.yiran.order.mapper.InventoryMapper;
 import com.yiran.order.mapper.OrderDetailsMapper;
 import com.yiran.order.mapper.OrdersMapper;
 import com.yiran.order.service.IOrdersService;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -30,14 +37,17 @@ import java.util.UUID;
 @Service
 public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> implements IOrdersService {
     private final OrdersMapper ordersMapper;
+    private final OrderDetailsMapper orderDetailsMapper;
+    private final FlowMapper flowMapper;
     private final CartClient cartClient;
     private final CouponClient couponClient;
-    private final OrderDetailsMapper orderDetailsMapper;
-    public OrdersServiceImpl(OrdersMapper ordersMapper, CartClient cartClient, CouponClient couponClient, OrderDetailsMapper orderDetailsMapper) {
+
+    public OrdersServiceImpl(OrdersMapper ordersMapper, OrderDetailsMapper orderDetailsMapper, FlowMapper flowMapper, CartClient cartClient, CouponClient couponClient) {
         this.ordersMapper = ordersMapper;
+        this.orderDetailsMapper = orderDetailsMapper;
+        this.flowMapper = flowMapper;
         this.cartClient = cartClient;
         this.couponClient = couponClient;
-        this.orderDetailsMapper = orderDetailsMapper;
     }
 
     /**
@@ -123,5 +133,23 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<OrderDetails> orderDetails = orderDetailsMapper.selectList(orderDetailsQueryWrapper);
         orders.setOrderDetails(orderDetails);
         return orders;
+    }
+    @RabbitListener(queues = "#{orderPayStatusQueue.name}")
+    public void orderPayStatus(AlipayVo alipayVo){
+        System.out.println("收到消息：修改订单状态---"+alipayVo);
+        Orders orders = new Orders();
+        orders.setOrderId(alipayVo.getOut_trade_no());
+        orders.setOrderState(new Byte("1"));
+        ordersMapper.updateById(orders);
+    }
+    @RabbitListener(queues = "#{flowCreateQueue.name}")
+    public void flowCreate(AlipayVo alipayVo){
+        System.out.println("收到消息：创建流水---"+alipayVo);
+        Flow flow = new Flow();
+        flow.setFlowNum(alipayVo.getTrade_no());
+        flow.setOrderId(alipayVo.getOut_trade_no());
+        flow.setPaidAmount(new BigDecimal(alipayVo.getTotal_amount()));
+        flow.setPaidTime(LocalDateTime.now());
+        flowMapper.insert(flow);
     }
 }
