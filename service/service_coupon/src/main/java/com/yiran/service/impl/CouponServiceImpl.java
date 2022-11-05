@@ -59,6 +59,8 @@ public class CouponServiceImpl implements CouponService {
         coupon.setFullMoney(fullAccount);
         coupon.setGrantStartTime(grantStartTime);
         coupon.setGrandEndTime(grandEndTime);
+        coupon.setReceivedNums(0);
+        coupon.setUsedNums(0);
         coupon.setTimeType(timeType);
         coupon.setQuota(quota);
         coupon.setIsDelete(false);
@@ -122,6 +124,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public ReceiveCoupon getReceiveCoupon(String couponId,String userId) {
         ReceiveCoupon receiveCoupon = new ReceiveCoupon();
+        //判断用户是否已有此优惠券
         List<String> couponIdList = receiveCouponMapper.selectList(new QueryWrapper<ReceiveCoupon>().select("coupon_id").eq("user_id",userId))
                 .stream()
                 .map(ReceiveCoupon::getCouponId)
@@ -129,29 +132,40 @@ public class CouponServiceImpl implements CouponService {
         if (couponIdList.contains(couponId)){
             return receiveCoupon;
         }
-
         // 点击领券时，received_nums+1
         Coupon coupon;
         String key = "coupon_Id"+couponId;
         String uuid = UUID.randomUUID().toString().replace("-","");
         boolean isLock = redisTemplate.opsForValue().setIfAbsent(key,uuid,100,TimeUnit.SECONDS);
         if (isLock){
-            System.out.println(Thread.currentThread().getName() +":抢到了优惠券的锁");
             coupon = (Coupon) redisTemplate.opsForValue().get("couponId"+couponId);
             if (coupon == null){
                 return null;
             }
             if (coupon.getQuota().equals(coupon.getReceivedNums())){
-                System.out.println(Thread.currentThread().getName() + "--- id="+couponId+"的优惠券也领完");
                 return null;
             }else {
                 //优惠券已领取数量+1
-                System.out.println(Thread.currentThread().getName() + "，已领取数量：" + coupon.getReceivedNums());
                 coupon.setReceivedNums(coupon.getReceivedNums()+1);
                 //新增用户领取的优惠券数据
-                receiveCoupon.setReceiveId("1");
+                receiveCoupon.setCouponId(couponId);
+                receiveCoupon.setUserId(userId);
+                receiveCoupon.setDrawTime(LocalDateTime.now());
+                receiveCoupon.setStatus((byte) 0);
+                receiveCoupon.setIsDelete(false);
+                if (coupon.getTimeType() == (byte) 0){
+                    //用户优惠券使用时间
+                    receiveCoupon.setStartTime(coupon.getUsageStartTime());
+                    receiveCoupon.setExpirationTime(coupon.getGrandEndTime());
+                }else {
+                    //用户优惠券周期时限
+                    receiveCoupon.setStartTime(LocalDateTime.now());
+                    receiveCoupon.setExpirationTime(LocalDateTime.now().plusSeconds(coupon.getTimelimit()));
+                }
+                receiveCouponMapper.insert(receiveCoupon);
                 redisTemplate.opsForValue().set("couponId"+couponId,coupon,24,TimeUnit.HOURS);
                 couponMapper.updateById(coupon);
+                //lua脚本
                 Long execute = (Long) redisTemplate.execute(script, Arrays.asList(key),uuid);
             }
         }else {

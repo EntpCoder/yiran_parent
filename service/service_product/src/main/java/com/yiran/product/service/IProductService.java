@@ -64,4 +64,14 @@ public interface IProductService{
      */
     ProductInfoNumVO getProInfoId(String proId, String sizeId, String colorId);
 
+    /**
+     * ES根据传入的商品名字或商品描述搜索商品
+     * @param proName 商品名字
+     * @param describe 商品描述
+     * @return 商品集合
+     */
+
+    List<ProductVO> getAllProByES(String proName,String describe);
+
+
 }

@@ -275,5 +275,42 @@ public class ProductServiceImpl implements IProductService {
         productInfoNumVO.setProAttributeInfoId(proAttributeInfoId);
         return productInfoNumVO;
     }
+    /**
+     * ES根据传入的商品名字或商品描述搜索商品
+     * @param proName 商品名字
+     * @param describe 商品描述
+     * @return 商品集合
+     */
+    @Override
+    public List<ProductVO> getAllProByES(String proName, String describe) {
+        //根据商品描述搜索
+        ArrayList<ProductVO> productVOS = new ArrayList<>();
+        if(proName == null){
+            //根据商品描述查询商品集合
+            QueryWrapper<Product> wrapper = new QueryWrapper<>();
+            wrapper.like("describe",describe);
+            List<Product> productList = productMapper.selectList(wrapper);
+            for (Product p:
+                 productList) {
+                ProductVO productVO = new ProductVO();
+                BeanUtils.copyProperties(p,productVO);
+                productVOS.add(productVO);
+            }
+        }
+        //根据商品名字查询
+        else{
+            //根据商品描述查询商品集合
+            QueryWrapper<Product> wrapper = new QueryWrapper<>();
+            wrapper.like("pro_name",proName);
+            List<Product> productList = productMapper.selectList(wrapper);
+            for (Product p:
+                    productList) {
+                ProductVO productVO = new ProductVO();
+                BeanUtils.copyProperties(p,productVO);
+                productVOS.add(productVO);
+            }
+        }
+        return productVOS;
+    }
 }
 
