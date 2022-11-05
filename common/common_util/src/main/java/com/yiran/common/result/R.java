@@ -3,6 +3,7 @@ package com.yiran.common.result;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,6 +55,8 @@ public class R<T> {
         result.setMessage(resultCodeEnum.getMessage());
         return result;
     }
+
+
     public R<T> data(String key,T  value){
         if (value != null){
             this.data.put(key, value);
