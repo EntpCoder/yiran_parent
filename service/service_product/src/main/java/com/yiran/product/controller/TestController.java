@@ -67,4 +67,15 @@ public class TestController {
         ProductInfoNumVO productInfoNumVO = productService.getProInfoId(proId, sizeId, colorId);
         return productInfoNumVO != null ? R.ok("result", productInfoNumVO) : R.fail();
     }
+    /**
+     * ES根据传入的商品名字或商品描述搜索商品
+     * @param proName 商品名字
+     * @param describe 商品描述
+     * @return 商品集合
+     */
+    @GetMapping("/getAllProByES")
+    public R<List<ProductVO>> getAllProByES(String proName,String describe){
+        List<ProductVO> allProByES = productService.getAllProByES(proName, describe);
+        return allProByES != null ?R.ok("result",allProByES) :R.fail();
+    }
 }
