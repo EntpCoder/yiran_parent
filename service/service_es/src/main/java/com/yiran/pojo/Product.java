@@ -7,7 +7,7 @@ import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 /**
  * @Author 小番茄
@@ -23,19 +23,20 @@ public class Product {
     private String proId;
     @Field(type =  FieldType.Text,analyzer = "ik_smart",searchAnalyzer = "ik_max_word")
     private String proName;
-    @Field(type = FieldType.Keyword)
-    private String kind;
-    @Field(type = FieldType.Keyword)
+    @Field(type = FieldType.Auto)
     private String proMainImageAddress;
     @Field(type = FieldType.Auto)
-    private Double sellingPrice;
+    private BigDecimal sellingPrice;
     @Field(type = FieldType.Auto)
-    private Double proPrice;
+    private BigDecimal proPrice;
     @Field(type = FieldType.Auto)
-    private Double discount;
-    @Field(type = FieldType.Keyword)
-    private String brandId;
-    @Field(type = FieldType.Text,analyzer = "ik_smart",searchAnalyzer = "ik_max_word")
-    private String describe;
+    private BigDecimal discount;
+    public Product(){}
+
+    public Product(String proId, String proName) {
+        this.proId = proId;
+        this.proName = proName;
+
+    }
 
 }

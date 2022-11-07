@@ -3,10 +3,9 @@ package com.yiran.controller;
 import com.yiran.common.result.R;
 import com.yiran.pojo.Product;
 import com.yiran.service.ElasticsearchService;
-import com.yiran.service.ProSQl;
+import com.yiran.service.RefreshDataService;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,23 +15,30 @@ import java.util.List;
 @RestController
 @RequestMapping("/es")
 public class ElasticsearchController {
-    private final ProSQl proSQl;
     private final ElasticsearchService elasticsearchService;
-    public ElasticsearchController(ProSQl proSQl, ElasticsearchService elasticsearchService) {
-        this.proSQl = proSQl;
+    private final RefreshDataService refreshDataService;
+    public ElasticsearchController(ElasticsearchService elasticsearchService, RefreshDataService refreshDataService) {
         this.elasticsearchService = elasticsearchService;
+        this.refreshDataService = refreshDataService;
     }
-
+    /**
+     * 高亮查询--根据商品名字分词查询
+     * @param kw 封装的名字
+     * @return 返回商品集合
+     */
     @GetMapping("/getHighProduct")
     public R<List<Product>> getHighProduct(@RequestParam("kw") String kw){
         List<Product> highProduct = elasticsearchService.getHighProduct(kw);
-        return R.ok("",highProduct);
+        return R.ok("highProduct",highProduct);
     }
-    @GetMapping("saveUser")
-    public String saveUser(String proName){
-        List<Product> users = new ArrayList<>();
-        elasticsearchService.getAllBy();
-        return "save successfully";
+    /**
+     * 更新数据库数据到es中
+     * @return 返回成功
+     */
+    @GetMapping("refreshDataService")
+    public R<String> refreshData(){
+        List<Product> allBy = elasticsearchService.getAllBy();
+        Iterable<Product> productIterable = refreshDataService.saveAll(allBy);
+        return R.ok();
     }
-
 }

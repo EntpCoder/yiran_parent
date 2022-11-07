@@ -1,7 +1,6 @@
 package com.yiran.service;
 
 import com.yiran.pojo.Product;
-import org.springframework.data.elasticsearch.repository.ElasticsearchRepository;
 
 import java.util.List;
 
@@ -11,7 +10,15 @@ import java.util.List;
  */
 public interface ElasticsearchService{
 
+    /**
+     * 高亮查询--根据商品名字分词查询
+     * @param kw 封装的名字
+     * @return 返回商品集合
+     */
     List<Product> getHighProduct(String kw);
-
-    String getAllBy();
+    /**
+     * 更新数据库数据到es中
+     * @return 返回成功
+     */
+    List<Product> getAllBy();
 }

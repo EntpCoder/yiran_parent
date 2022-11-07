@@ -24,57 +24,73 @@ import java.util.Map;
  */
 @Service
 public class ElasticsearchServiceImpl implements ElasticsearchService {
-
-    //模糊查询使用
     private final ElasticsearchRestTemplate restTemplate;
     private final ProductClient  productClient;
     public ElasticsearchServiceImpl(ElasticsearchRestTemplate restTemplate, ProductClient productClient) {
         this.restTemplate = restTemplate;
         this.productClient = productClient;
+
     }
 
+    /**
+     * 高亮查询--根据商品名字分词查询
+     * @param kw 封装的名字
+     * @return 返回商品集合
+     */
     @Override
     public List<Product> getHighProduct(String kw) {
         //根据一个值查询多个字段，并高亮显示，这里的查询是取并集，以及多个字段只要一个字段满足即可
+        //需要查询的字段
         BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
-                //商品名字
-                .should(QueryBuilders.matchQuery("proName", kw))
-                //商品描述
-                .should(QueryBuilders.matchQuery("describe", kw));
+                .should(QueryBuilders.matchQuery("proName", kw));
         //构建高亮查询
         NativeSearchQuery searchQuery = new NativeSearchQueryBuilder()
                 .withQuery(boolQueryBuilder)
                 .withHighlightFields(
-                        new HighlightBuilder.Field("proName"),
-                        new HighlightBuilder.Field("describe"))
+                        new HighlightBuilder.Field("proName"))
                 .withHighlightBuilder(new HighlightBuilder()
                         .preTags("<span style='color:yellow'>")
-                        .preTags("</span>"))
+                        .postTags("</span>"))
                 .build();
-        //发送请求结果集
-        SearchHits<Product> searchHits = restTemplate.search(searchQuery, Product.class);
-        //命中的对象集合
-        List<SearchHit<Product>> hits = searchHits.getSearchHits();
+        //查询
+        SearchHits<Product> search = restTemplate.search(searchQuery,Product.class);
+        //得到查询返回的内容
+        List<SearchHit<Product>> searchHits = search.getSearchHits();
         //设置一个最后需要返回实体类集合
-        List<Product> productList = new ArrayList<>();
-        for (SearchHit<Product> searchHit : hits) {
+        List<Product> productList =new ArrayList<>();
+        for (SearchHit<Product> searchHit: searchHits){
             //高亮内容
-            Map<String, List<String>> highlight = searchHit.getHighlightFields();
+            Map<String,List<String>> higliig =searchHit.getHighlightFields();
             //将高亮内容填充到Content中
-            String proName = highlight.get("proName") == null ? searchHit.getContent().getProName() : highlight.get("proName").get(0);
-            String describe = highlight.get("describe") == null ? searchHit.getContent().getProName() : highlight.get("describe").get(0);
+            String proName = higliig.get("proName") == null? searchHit.getContent().getProName():higliig.get("proName").get(0);
+           // String describe = higliig.get("describe") == null? searchHit.getContent().getProName():higliig.get("describe").get(0);
             searchHit.getContent().setProName(proName);
-            searchHit.getContent().setDescribe(describe);
             //放入到实体类中
             productList.add(searchHit.getContent());
         }
         return productList;
     }
+    /**
+     * 更新数据库数据到es中
+     * @return 返回成功
+     */
     @Override
-    public String getAllBy(){
-        List<ProductVO> productVo = productClient.getAllProductVo();
-        productVo.forEach(System.out::println);
-        return null;
-    }
+    public List<Product> getAllBy(){
+        List<ProductVO> allProductVo = productClient.getAllProductVo();
+        List<Product> products = new ArrayList<>();
+        for (ProductVO p :
+             allProductVo) {
+            Product  product =new Product(p.getProId(),p.getProName());
+            product.setId(Integer.valueOf((p.getProId())));
+            product.setProName(p.getProName());
+            product.setProMainImageAddress(p.getProMainImageAddress());
+            product.setProPrice(p.getProPrice());
+            product.setSellingPrice(p.getSellingPrice());
+            product.setDiscount(p.getDiscount());
+            products.add(product);
+            System.out.println(products);
+        }
+        return products;
 
+    }
 }
