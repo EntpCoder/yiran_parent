@@ -59,6 +59,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
             User user=userMapper.selectById(c.getUserId());
             commentVo.setUserName(user.getUsername());
             commentVo.setImage(user.getImage());
+            commentVo.setUserId(user.getUserId());
             commentVoList.add(commentVo);
         }
         return commentVoList;

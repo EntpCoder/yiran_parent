@@ -17,6 +17,7 @@ public class CommentVo {
     /**
      * 用户头像
      */
+    private String userId;
     private String image;
     private String userName;
     private LocalDateTime createTime;
