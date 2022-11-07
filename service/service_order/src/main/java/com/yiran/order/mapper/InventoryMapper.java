@@ -23,4 +23,13 @@ public interface InventoryMapper extends BaseMapper<Inventory> {
      */
     int deductInventory(@Param("proAttributeInfoId") String proAttributeInfoId,
                         @Param("nums") Integer nums);
+
+    /**
+     * 恢复库存
+     * @param proAttributeInfoId 商品属性id
+     * @param nums 数量
+     * @return 影响行数
+     */
+    int restoreInventory(@Param("proAttributeInfoId") String proAttributeInfoId,
+                         @Param("nums") Integer nums);
 }

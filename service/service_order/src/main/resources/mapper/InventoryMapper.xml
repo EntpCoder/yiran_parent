@@ -4,4 +4,7 @@
     <update id="deductInventory">
         update inventory set nums = nums - #{nums} where pro_attribute_info_id = #{proAttributeInfoId}
     </update>
+    <update id="restoreInventory">
+        update inventory set nums = nums + #{nums} where pro_attribute_info_id = #{proAttributeInfoId}
+    </update>
 </mapper>

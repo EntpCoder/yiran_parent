@@ -13,6 +13,7 @@ import com.yiran.pay.service.IAlipayService;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -36,6 +37,8 @@ public class AlipayServiceImpl implements IAlipayService {
     public String goAliPay(String orderId) {
         // 查询订单信息
         Orders order = orderClient.queryOrder(orderId).getData().get("order");
+        // 订单超时时间
+        String timeExpire = order.getCreateTime().plusMinutes(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         // 调用alipay.trade.page.pay接口 发起支付请求
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
         request.setReturnUrl(AlipayProperties.RETURN_URL);
@@ -45,6 +48,7 @@ public class AlipayServiceImpl implements IAlipayService {
         bizContent.put("out_trade_no", order.getOrderId());
         bizContent.put("total_amount", order.getOrderAmount());
         bizContent.put("subject",order.getSubject());
+        bizContent.put("time_expire",timeExpire);
         bizContent.put("product_code", "FAST_INSTANT_TRADE_PAY");
         request.setBizContent(bizContent.toString());
         String form = "";
