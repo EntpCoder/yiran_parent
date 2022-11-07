@@ -3,6 +3,7 @@ package com.yiran.service;
 
 import com.yiran.model.entity.Coupon;
 import com.yiran.model.entity.ReceiveCoupon;
+import com.yiran.model.vo.ReceiveCouponVO;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ public interface CouponService {
      * @param usrId 用户Id
      * @return 优惠券集合
      */
-    List<ReceiveCoupon> getByUserId(String usrId);
+    List<ReceiveCouponVO> getByUserId(String usrId);
 
     /**
      * 通过用户优惠券id 消费优惠券
@@ -73,4 +74,11 @@ public interface CouponService {
      * @return 优惠金额
      */
     BigDecimal getDiscountAmount(String receiveId);
+
+    /**
+     * 购物车查询可用优惠券
+     * @param usrId 用户id
+     * @return 可用优惠券
+     */
+    List<ReceiveCouponVO> getUsableCoupon(String usrId);
 }

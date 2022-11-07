@@ -4,6 +4,7 @@ import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.Coupon;
 import com.yiran.model.entity.ReceiveCoupon;
+import com.yiran.model.vo.ReceiveCouponVO;
 import com.yiran.service.CouponService;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,8 +54,8 @@ public class CouponController {
      * @return 优惠券集合
      */
     @GetMapping("/getByUserId")
-    public R<List<ReceiveCoupon>> getByUserId(@RequestHeader("userId") String userId){
-        List<ReceiveCoupon> couponList = couponService.getByUserId(userId);
+    public R<List<ReceiveCouponVO>> getByUserId(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> couponList = couponService.getByUserId(userId);
         return couponList.size()> 0 ? R.ok("CouponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
     /**
@@ -107,5 +108,15 @@ public class CouponController {
     public R<BigDecimal> getAmount(@PathVariable("receiveId") String receiveId){
         BigDecimal discountAmount = couponService.getDiscountAmount(receiveId);
         return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 购物车查询可用优惠券
+     * @param userId 用户id
+     * @return 可用优惠券
+     */
+    @GetMapping("/getUsableCoupon")
+    public R<List<ReceiveCouponVO>> getUsableCoupon(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> receiveCouponVoS = couponService.getUsableCoupon(userId);
+        return receiveCouponVoS.size()> 0 ? R.ok("couponList",receiveCouponVoS):R.fail(ResultCodeEnum.FAIL);
     }
 }

@@ -7,7 +7,9 @@ import com.yiran.mapper.ReceiveCouponMapper;
 import com.yiran.model.entity.Coupon;
 import com.yiran.model.entity.Orders;
 import com.yiran.model.entity.ReceiveCoupon;
+import com.yiran.model.vo.ReceiveCouponVO;
 import com.yiran.service.CouponService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -75,10 +78,24 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<ReceiveCoupon> getByUserId(String usrId) {
+    public List<ReceiveCouponVO> getByUserId(String usrId) {
+        List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",usrId);
-        return receiveCouponMapper.selectList(queryWrapper);
+        List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
+        List<String> couponIds = new ArrayList<>();
+        for (ReceiveCoupon r:
+                receiveCoupons) {
+            ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
+            couponIds.add(r.getCouponId());
+            BeanUtils.copyProperties(r,receiveCouponVO);
+            receiveCouponVoS.add(receiveCouponVO);
+        }
+        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
+        for (int i = 0; i<receiveCouponVoS.size(); i++){
+            BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
+        }
+        return receiveCouponVoS;
     }
 
     @Override
@@ -194,6 +211,27 @@ public class CouponServiceImpl implements CouponService {
         } else{
             return new BigDecimal(0);
         }
+    }
+
+    @Override
+    public List<ReceiveCouponVO> getUsableCoupon(String usrId) {
+        List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
+        QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",usrId).eq("status",(byte) 0);
+        List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
+        List<String> couponIds = new ArrayList<>();
+        for (ReceiveCoupon r:
+             receiveCoupons) {
+            ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
+            couponIds.add(r.getCouponId());
+            BeanUtils.copyProperties(r,receiveCouponVO);
+            receiveCouponVoS.add(receiveCouponVO);
+        }
+        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
+        for (int i = 0; i<receiveCouponVoS.size(); i++){
+                BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
+            }
+        return receiveCouponVoS;
     }
 
 
