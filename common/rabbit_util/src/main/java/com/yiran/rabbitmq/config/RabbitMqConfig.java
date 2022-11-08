@@ -37,6 +37,10 @@ public class RabbitMqConfig {
             return new Queue("order.create.delayed");
         }
         @Bean
+        public Queue couponFailureQueue(){
+            return new Queue("coupon.failure.delayed");
+        }
+        @Bean
         public Binding bindingOrderPayStatusQueue(TopicExchange topic, Queue orderPayStatusQueue){
             return BindingBuilder.bind(orderPayStatusQueue).to(topic).with("order.pay.finish.#");
         }
@@ -47,6 +51,10 @@ public class RabbitMqConfig {
         @Bean
         public Binding bindingDelayedOrderQueue(CustomExchange delayed,Queue delayedOrderQueue){
             return BindingBuilder.bind(delayedOrderQueue).to(delayed).with("order.create").noargs();
+        }
+        @Bean
+        public Binding bindingCouponFailureQueue(CustomExchange delayed,Queue couponFailureQueue){
+            return BindingBuilder.bind(couponFailureQueue).to(delayed).with("coupon.failure").noargs();
         }
     }
 }

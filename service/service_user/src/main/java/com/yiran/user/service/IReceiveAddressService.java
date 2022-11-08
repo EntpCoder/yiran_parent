@@ -16,10 +16,10 @@ import java.util.List;
 public interface IReceiveAddressService extends IService<ReceiveAddress> {
     /**
      * 按地址id查找地址信息
-     * @param id 地址id
+     * @param addressId 地址id
      * @return 地址详情
      */
-    ReceiveAddress selectUserAddress(String id);
+    ReceiveAddress selectAddress(String addressId);
 
     /**
      * 按照用户id添加新地址

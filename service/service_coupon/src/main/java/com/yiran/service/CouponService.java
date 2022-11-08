@@ -16,29 +16,12 @@ import java.util.List;
 public interface CouponService {
     /**
      * 商家生成优惠券
-     * @param subject 优惠券标题
-     * @param discountAmount 优惠金额
-     * @param fullMoney 满减金额
-     * @param grantStartTime 发放开始时间
-     * @param grandEndTime  发放结束时间
-     * @param usageStartTime 使用时间
-     * @param usageEndTime 使用结束时间
-     * @param timelimit 优惠券时限
-     * @param timeType  时效类型
-     * @param quota 配额
+     * @param coupon 优惠券对象
      * @return  true成功 false失败
      */
-    Boolean createCoupon(String subject, String discountAmount, String fullMoney,
-                        LocalDateTime grantStartTime,LocalDateTime grandEndTime,
-                        LocalDateTime usageStartTime,LocalDateTime usageEndTime,
-                         Long timelimit,Byte timeType,Integer quota);
+    Boolean createCoupon(Coupon coupon);
 
-    /**
-     * 用户查询已领取优惠券
-     * @param usrId 用户Id
-     * @return 优惠券集合
-     */
-    List<ReceiveCouponVO> getByUserId(String usrId);
+
 
     /**
      * 通过用户优惠券id 消费优惠券
@@ -76,9 +59,23 @@ public interface CouponService {
     BigDecimal getDiscountAmount(String receiveId);
 
     /**
-     * 购物车查询可用优惠券
+     * 用户查询已失效优惠券
+     * @param usrId 用户Id
+     * @return 优惠券集合
+     */
+    List<ReceiveCouponVO> getFailureCoupon(String usrId);
+
+    /**
+     * 用户查询可用优惠券
      * @param usrId 用户id
      * @return 可用优惠券
      */
     List<ReceiveCouponVO> getUsableCoupon(String usrId);
+
+    /**
+     * 用户查询已使用优惠券
+     * @param usrId 用户id
+     * @return 已使用优惠券
+     */
+    List<ReceiveCouponVO> getUsedCoupon(String usrId);
 }

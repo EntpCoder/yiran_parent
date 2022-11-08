@@ -9,6 +9,8 @@ import com.yiran.model.entity.Orders;
 import com.yiran.model.entity.ReceiveCoupon;
 import com.yiran.model.vo.ReceiveCouponVO;
 import com.yiran.service.CouponService;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -37,12 +39,14 @@ public class CouponServiceImpl implements CouponService {
     private final OrdersMapper ordersMapper;
     private final RedisTemplate<String,Object> redisTemplate;
     private DefaultRedisScript script;
+    private final RabbitTemplate rabbitTemplate;
 
-    public CouponServiceImpl(CouponMapper couponMapper, ReceiveCouponMapper receiveCouponMapper, OrdersMapper ordersMapper, RedisTemplate<String, Object> redisTemplate) {
+    public CouponServiceImpl(CouponMapper couponMapper, ReceiveCouponMapper receiveCouponMapper, OrdersMapper ordersMapper, RedisTemplate<String, Object> redisTemplate, RabbitTemplate rabbitTemplate) {
         this.couponMapper = couponMapper;
         this.receiveCouponMapper = receiveCouponMapper;
         this.ordersMapper = ordersMapper;
         this.redisTemplate = redisTemplate;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @PostConstruct
@@ -53,47 +57,23 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Boolean createCoupon(String subject, String discountAmount, String fullMoney, LocalDateTime grantStartTime, LocalDateTime grandEndTime,LocalDateTime usageStartTime,LocalDateTime usageEndTime,Long timelimit,Byte timeType, Integer quota) {
-        Coupon coupon = new Coupon();
-        coupon.setSubject(subject);
-        BigDecimal disAccount = new BigDecimal(discountAmount);
-        BigDecimal fullAccount = new BigDecimal(fullMoney);
-        coupon.setDiscountAmount(disAccount);
-        coupon.setFullMoney(fullAccount);
-        coupon.setGrantStartTime(grantStartTime);
-        coupon.setGrandEndTime(grandEndTime);
-        coupon.setReceivedNums(0);
-        coupon.setUsedNums(0);
-        coupon.setTimeType(timeType);
-        coupon.setQuota(quota);
-        coupon.setIsDelete(false);
-        if (timeType == 0){
-            coupon.setUsageStartTime(usageStartTime);
-            coupon.setUsageEndTime(usageEndTime);
-        }
-        if (timeType == 1){
-            coupon.setTimelimit(timelimit);
-        }
+    public Boolean createCoupon(Coupon coupon) {
         return couponMapper.insert(coupon) >0;
     }
 
     @Override
-    public List<ReceiveCouponVO> getByUserId(String usrId) {
+    public List<ReceiveCouponVO> getFailureCoupon(String usrId) {
         List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",usrId);
+        queryWrapper.eq("user_id",usrId).eq("status",(byte) 2);
         List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
-        List<String> couponIds = new ArrayList<>();
         for (ReceiveCoupon r:
                 receiveCoupons) {
             ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
-            couponIds.add(r.getCouponId());
             BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
             receiveCouponVoS.add(receiveCouponVO);
-        }
-        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
-        for (int i = 0; i<receiveCouponVoS.size(); i++){
-            BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
         }
         return receiveCouponVoS;
     }
@@ -130,11 +110,6 @@ public class CouponServiceImpl implements CouponService {
         //加载所有有效的优惠券
         LocalDateTime currentTime = LocalDateTime.now();
         List<Coupon> couponList = couponMapper.selectList(new QueryWrapper<Coupon>().le("grant_start_time",currentTime).ge("grand_end_time",currentTime));
-        for (Coupon c:
-             couponList) {
-            String key = "couponId"+c.getCouponId();
-            redisTemplate.opsForValue().set(key,c,24, TimeUnit.HOURS);
-        }
         return couponList;
     }
 
@@ -174,12 +149,18 @@ public class CouponServiceImpl implements CouponService {
                     //用户优惠券使用时间
                     receiveCoupon.setStartTime(coupon.getUsageStartTime());
                     receiveCoupon.setExpirationTime(coupon.getGrandEndTime());
+                    receiveCouponMapper.insert(receiveCoupon);
                 }else {
                     //用户优惠券周期时限
                     receiveCoupon.setStartTime(LocalDateTime.now());
                     receiveCoupon.setExpirationTime(LocalDateTime.now().plusSeconds(coupon.getTimelimit()));
+                    receiveCouponMapper.insert(receiveCoupon);
+                    //发送延时队列
+                    rabbitTemplate.convertAndSend("yiran.delayed.exchange","coupon.failure",receiveCoupon.getReceiveId(),message -> {
+                        message.getMessageProperties().setDelay(coupon.getTimelimit());
+                        return message;
+                    });
                 }
-                receiveCouponMapper.insert(receiveCoupon);
                 redisTemplate.opsForValue().set("couponId"+couponId,coupon,24,TimeUnit.HOURS);
                 couponMapper.updateById(coupon);
                 //lua脚本
@@ -219,19 +200,43 @@ public class CouponServiceImpl implements CouponService {
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",usrId).eq("status",(byte) 0);
         List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
-        List<String> couponIds = new ArrayList<>();
         for (ReceiveCoupon r:
              receiveCoupons) {
             ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
-            couponIds.add(r.getCouponId());
             BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
             receiveCouponVoS.add(receiveCouponVO);
         }
-        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
-        for (int i = 0; i<receiveCouponVoS.size(); i++){
-                BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
-            }
         return receiveCouponVoS;
+    }
+
+    @Override
+    public List<ReceiveCouponVO> getUsedCoupon(String usrId) {
+        List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
+        QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",usrId).eq("status",(byte) 1);
+        List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
+        for (ReceiveCoupon r:
+                receiveCoupons) {
+            ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
+            BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
+            Orders order = ordersMapper.selectOne(new QueryWrapper<Orders>().select("numbers").eq("receive_coupon_id",r.getReceiveId()));
+            receiveCouponVO.setNumbers(order.getNumbers());
+            receiveCouponVO.setUpdateTime(r.getUpdateTime());
+            receiveCouponVoS.add(receiveCouponVO);
+        }
+        return receiveCouponVoS;
+    }
+
+    @RabbitListener(queues = "#{couponFailureQueue.name}")
+    public void failureCoupon(String receiveId){
+        System.out.println("失效优惠券id"+receiveId);
+        ReceiveCoupon receiveCoupon = receiveCouponMapper.selectById(receiveId);
+        receiveCoupon.setStatus((byte) 2);
+        receiveCouponMapper.updateById(receiveCoupon);
     }
 
 

@@ -20,3 +20,5 @@ spring:
             group: COMMON_GROUP
           - data-id: redis.yml
             group: COMMON_GROUP
+          - data-id: rabbitmq.yml
+            group: COMMON_GROUP

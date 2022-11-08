@@ -2,7 +2,6 @@ package com.yiran.product.controller;
 
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
-import com.yiran.model.entity.Collections;
 import com.yiran.model.vo.CollectionsVO;
 import com.yiran.product.service.CollServicel;
 import org.springframework.web.bind.annotation.*;
@@ -63,6 +62,5 @@ public class CollectionsController {
     public R<Boolean> chaxun(String proId,@RequestHeader("userId") String userId){
         return collServicel.chaxun(proId,userId)?R.ok("iscollect",true):R.ok("iscollect",false);
     }
-
 
 }

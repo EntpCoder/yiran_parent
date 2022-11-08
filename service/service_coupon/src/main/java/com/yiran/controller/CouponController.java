@@ -9,7 +9,6 @@ import com.yiran.service.CouponService;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -28,36 +27,14 @@ public class CouponController {
     /**
      *
      * 商家生成优惠券
-     * @param subject 优惠券标题
-     * @param discountAmount 优惠金额
-     * @param fullMoney 满减金额
-     * @param grantStartTime 发放开始时间
-     * @param grandEndTime  发放结束时间
-     * @param usageStartTime 使用时间
-     * @param usageEndTime 使用结束时间
-     * @param timelimit 优惠券时限
-     * @param timeType  时效类型
-     * @param quota 配额
+     * @param coupon 优惠券对象
      * @return  true成功 false失败
      */
     @PostMapping("/createCoupon")
-    public R<Boolean> createCoupon(String subject, String discountAmount, String fullMoney,
-                                   LocalDateTime grantStartTime, LocalDateTime grandEndTime,
-                                   LocalDateTime usageStartTime, LocalDateTime usageEndTime,
-                                   Long timelimit, Byte timeType, Integer quota){
-        return couponService.createCoupon(subject,discountAmount,fullMoney, grantStartTime,grandEndTime,
-                usageStartTime,usageEndTime,timelimit,timeType,quota)? R.ok("创建成功",true):R.fail(ResultCodeEnum.FAIL);
+    public R<Boolean> createCoupon(Coupon coupon){
+        return couponService.createCoupon(coupon)? R.ok("创建成功",true):R.fail(ResultCodeEnum.FAIL);
     }
-    /**
-     * 用户查询已领取优惠券
-     * @param userId 用户Id
-     * @return 优惠券集合
-     */
-    @GetMapping("/getByUserId")
-    public R<List<ReceiveCouponVO>> getByUserId(@RequestHeader("userId") String userId){
-        List<ReceiveCouponVO> couponList = couponService.getByUserId(userId);
-        return couponList.size()> 0 ? R.ok("CouponList",couponList):R.fail(ResultCodeEnum.FAIL);
-    }
+
     /**
      * 消费优惠券
      * @param receiveId 优惠券id
@@ -110,13 +87,33 @@ public class CouponController {
         return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
     }
     /**
-     * 购物车查询可用优惠券
+     * 用户查询可用优惠券
      * @param userId 用户id
      * @return 可用优惠券
      */
     @GetMapping("/getUsableCoupon")
     public R<List<ReceiveCouponVO>> getUsableCoupon(@RequestHeader("userId") String userId){
         List<ReceiveCouponVO> receiveCouponVoS = couponService.getUsableCoupon(userId);
-        return receiveCouponVoS.size()> 0 ? R.ok("couponList",receiveCouponVoS):R.fail(ResultCodeEnum.FAIL);
+        return receiveCouponVoS.size()> 0 ? R.ok("usableCouponList",receiveCouponVoS):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 用户查询已失效优惠券
+     * @param userId 用户Id
+     * @return 优惠券集合
+     */
+    @GetMapping("/getFailureCoupon")
+    public R<List<ReceiveCouponVO>> getByUserId(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> couponList = couponService.getFailureCoupon(userId);
+        return couponList.size()> 0 ? R.ok("failureCouponList",couponList):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 用户查询已使用优惠券
+     * @param userId 用户id
+     * @return 已使用优惠券
+     */
+    @GetMapping("/getUsedCoupon")
+    public R<List<ReceiveCouponVO>> getUsedCoupon(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> couponList = couponService.getUsedCoupon(userId);
+        return couponList.size()> 0 ? R.ok("usedCouponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
 }
