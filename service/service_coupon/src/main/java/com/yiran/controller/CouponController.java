@@ -48,16 +48,7 @@ public class CouponController {
         return couponService.createCoupon(subject,discountAmount,fullMoney, grantStartTime,grandEndTime,
                 usageStartTime,usageEndTime,timelimit,timeType,quota)? R.ok("创建成功",true):R.fail(ResultCodeEnum.FAIL);
     }
-    /**
-     * 用户查询已领取优惠券
-     * @param userId 用户Id
-     * @return 优惠券集合
-     */
-    @GetMapping("/getByUserId")
-    public R<List<ReceiveCouponVO>> getByUserId(@RequestHeader("userId") String userId){
-        List<ReceiveCouponVO> couponList = couponService.getByUserId(userId);
-        return couponList.size()> 0 ? R.ok("CouponList",couponList):R.fail(ResultCodeEnum.FAIL);
-    }
+
     /**
      * 消费优惠券
      * @param receiveId 优惠券id
@@ -110,13 +101,33 @@ public class CouponController {
         return discountAmount !=null ? R.ok("discountAmount",discountAmount):R.fail(ResultCodeEnum.FAIL);
     }
     /**
-     * 购物车查询可用优惠券
+     * 用户查询可用优惠券
      * @param userId 用户id
      * @return 可用优惠券
      */
     @GetMapping("/getUsableCoupon")
     public R<List<ReceiveCouponVO>> getUsableCoupon(@RequestHeader("userId") String userId){
         List<ReceiveCouponVO> receiveCouponVoS = couponService.getUsableCoupon(userId);
-        return receiveCouponVoS.size()> 0 ? R.ok("couponList",receiveCouponVoS):R.fail(ResultCodeEnum.FAIL);
+        return receiveCouponVoS.size()> 0 ? R.ok("usableCouponList",receiveCouponVoS):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 用户查询已失效优惠券
+     * @param userId 用户Id
+     * @return 优惠券集合
+     */
+    @GetMapping("/getFailureCoupon")
+    public R<List<ReceiveCouponVO>> getByUserId(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> couponList = couponService.getFailureCoupon(userId);
+        return couponList.size()> 0 ? R.ok("failureCouponList",couponList):R.fail(ResultCodeEnum.FAIL);
+    }
+    /**
+     * 用户查询已使用优惠券
+     * @param userId 用户id
+     * @return 已使用优惠券
+     */
+    @GetMapping("/getUsedCoupon")
+    public R<List<ReceiveCouponVO>> getUsedCoupon(@RequestHeader("userId") String userId){
+        List<ReceiveCouponVO> couponList = couponService.getUsedCoupon(userId);
+        return couponList.size()> 0 ? R.ok("usedCouponList",couponList):R.fail(ResultCodeEnum.FAIL);
     }
 }

@@ -33,12 +33,7 @@ public interface CouponService {
                         LocalDateTime usageStartTime,LocalDateTime usageEndTime,
                          Long timelimit,Byte timeType,Integer quota);
 
-    /**
-     * 用户查询已领取优惠券
-     * @param usrId 用户Id
-     * @return 优惠券集合
-     */
-    List<ReceiveCouponVO> getByUserId(String usrId);
+
 
     /**
      * 通过用户优惠券id 消费优惠券
@@ -76,9 +71,23 @@ public interface CouponService {
     BigDecimal getDiscountAmount(String receiveId);
 
     /**
-     * 购物车查询可用优惠券
+     * 用户查询已失效优惠券
+     * @param usrId 用户Id
+     * @return 优惠券集合
+     */
+    List<ReceiveCouponVO> getFailureCoupon(String usrId);
+
+    /**
+     * 用户查询可用优惠券
      * @param usrId 用户id
      * @return 可用优惠券
      */
     List<ReceiveCouponVO> getUsableCoupon(String usrId);
+
+    /**
+     * 用户查询已使用优惠券
+     * @param usrId 用户id
+     * @return 已使用优惠券
+     */
+    List<ReceiveCouponVO> getUsedCoupon(String usrId);
 }

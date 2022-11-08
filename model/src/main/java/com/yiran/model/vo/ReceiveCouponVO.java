@@ -25,4 +25,6 @@ public class ReceiveCouponVO {
     private String subject;
     private BigDecimal discountAmount;
     private BigDecimal fullMoney;
+    private String numbers;
+    private LocalDateTime updateTime;
 }

@@ -78,22 +78,18 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<ReceiveCouponVO> getByUserId(String usrId) {
+    public List<ReceiveCouponVO> getFailureCoupon(String usrId) {
         List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("user_id",usrId);
+        queryWrapper.eq("user_id",usrId).eq("status",(byte) 2);
         List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
-        List<String> couponIds = new ArrayList<>();
         for (ReceiveCoupon r:
                 receiveCoupons) {
             ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
-            couponIds.add(r.getCouponId());
             BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
             receiveCouponVoS.add(receiveCouponVO);
-        }
-        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
-        for (int i = 0; i<receiveCouponVoS.size(); i++){
-            BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
         }
         return receiveCouponVoS;
     }
@@ -219,18 +215,34 @@ public class CouponServiceImpl implements CouponService {
         QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_id",usrId).eq("status",(byte) 0);
         List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
-        List<String> couponIds = new ArrayList<>();
         for (ReceiveCoupon r:
              receiveCoupons) {
             ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
-            couponIds.add(r.getCouponId());
             BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
             receiveCouponVoS.add(receiveCouponVO);
         }
-        List<Coupon> coupons = couponMapper.selectList(new QueryWrapper<Coupon>().in("coupon_id",couponIds));
-        for (int i = 0; i<receiveCouponVoS.size(); i++){
-                BeanUtils.copyProperties(coupons.get(i),receiveCouponVoS.get(i));
-            }
+        return receiveCouponVoS;
+    }
+
+    @Override
+    public List<ReceiveCouponVO> getUsedCoupon(String usrId) {
+        List<ReceiveCouponVO> receiveCouponVoS = new ArrayList<>();
+        QueryWrapper<ReceiveCoupon> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id",usrId).eq("status",(byte) 1);
+        List<ReceiveCoupon> receiveCoupons = receiveCouponMapper.selectList(queryWrapper);
+        for (ReceiveCoupon r:
+                receiveCoupons) {
+            ReceiveCouponVO receiveCouponVO = new ReceiveCouponVO();
+            BeanUtils.copyProperties(r,receiveCouponVO);
+            Coupon coupon = couponMapper.selectById(r.getCouponId());
+            BeanUtils.copyProperties(coupon,receiveCouponVO);
+            Orders order = ordersMapper.selectOne(new QueryWrapper<Orders>().select("numbers").eq("receive_coupon_id",r.getReceiveId()));
+            receiveCouponVO.setNumbers(order.getNumbers());
+            receiveCouponVO.setUpdateTime(r.getUpdateTime());
+            receiveCouponVoS.add(receiveCouponVO);
+        }
         return receiveCouponVoS;
     }
 
