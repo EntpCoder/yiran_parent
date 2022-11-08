@@ -31,8 +31,8 @@ public class ReceiveAddressServiceImpl extends ServiceImpl<ReceiveAddressMapper,
     }
 
     @Override
-    public ReceiveAddress selectUserAddress(String id) {
-        return receiveAddressMapper.selectById(id);
+    public ReceiveAddress selectAddress(String addressId) {
+        return receiveAddressMapper.selectById(addressId);
     }
 
     @Override
