@@ -16,22 +16,10 @@ import java.util.List;
 public interface CouponService {
     /**
      * 商家生成优惠券
-     * @param subject 优惠券标题
-     * @param discountAmount 优惠金额
-     * @param fullMoney 满减金额
-     * @param grantStartTime 发放开始时间
-     * @param grandEndTime  发放结束时间
-     * @param usageStartTime 使用时间
-     * @param usageEndTime 使用结束时间
-     * @param timelimit 优惠券时限
-     * @param timeType  时效类型
-     * @param quota 配额
+     * @param coupon 优惠券对象
      * @return  true成功 false失败
      */
-    Boolean createCoupon(String subject, String discountAmount, String fullMoney,
-                        LocalDateTime grantStartTime,LocalDateTime grandEndTime,
-                        LocalDateTime usageStartTime,LocalDateTime usageEndTime,
-                         Long timelimit,Byte timeType,Integer quota);
+    Boolean createCoupon(Coupon coupon);
 
 
 
