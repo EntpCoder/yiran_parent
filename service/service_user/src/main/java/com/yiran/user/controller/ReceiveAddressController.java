@@ -28,8 +28,9 @@ public class ReceiveAddressController{
      * @return R
      */
     @RequestMapping("/getAddress")
-    public R<ReceiveAddress> getAddress(){
-        return R.ok("getAddressById",receiveAddressService.selectUserAddress("1001"));
+    public R<ReceiveAddress> getAddress(@PathParam("addressId") String addressId){
+        ReceiveAddress receiveAddress=receiveAddressService.selectAddress(addressId);
+        return receiveAddress==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok",receiveAddress);
     }
 
     /**
@@ -37,8 +38,8 @@ public class ReceiveAddressController{
      * @return R
      */
     @PostMapping("/insert")
-    public R<Boolean> insertAddress(){
-        return receiveAddressService.insertAddressByUserId("101")?R.ok("insert ok", true):R.fail(ResultCodeEnum.FAIL);
+    public R<Boolean> insertAddress(@RequestHeader("userId") String userId){
+        return receiveAddressService.insertAddressByUserId(userId)?R.ok("insert ok", true):R.fail(ResultCodeEnum.FAIL);
     }
 
     /**
@@ -46,8 +47,8 @@ public class ReceiveAddressController{
      * @return R
      */
     @PostMapping("/delete")
-    public R<Boolean> deleteAddress(){
-        return receiveAddressService.deleteAddress("1004")?R.ok("delete ok",true):R.fail(ResultCodeEnum.FAIL);
+    public R<Boolean> deleteAddress(@PathParam("addressId") String addressId){
+        return receiveAddressService.deleteAddress(addressId)?R.ok("delete ok",true):R.fail(ResultCodeEnum.FAIL);
     }
 
     /**
@@ -59,8 +60,15 @@ public class ReceiveAddressController{
     public R<Boolean> updateAddressByUserId(@PathParam("userId") String addressId){
         return receiveAddressService.updateAddress(addressId)?R.ok("update ok",true):R.fail(ResultCodeEnum.FAIL);
     }
+
+    /**
+     * 根据用户id查找用户的所有地址
+     * @param userId 用户id
+     * @return 地址列表
+     */
     @GetMapping("/getUserAddress")
     public R<List<ReceiveAddress>> getUserAddress(@RequestHeader("userId") String userId){
-        return R.ok("userAddressList",receiveAddressService.getAddressByUserId(userId));
+        List<ReceiveAddress> receiveAddresses=receiveAddressService.getAddressByUserId(userId);
+        return receiveAddresses==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok",receiveAddresses);
     }
 }

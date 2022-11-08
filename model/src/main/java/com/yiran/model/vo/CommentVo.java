@@ -26,5 +26,12 @@ public class CommentVo {
      * 评论中的图片
      */
     private String img;
+    /**
+     * 单个用户的满意度
+     */
     private BigDecimal satisfactionScore;
+    /**
+     * 总体用户满意度
+     */
+    private BigDecimal degreeOfSatisfaction;
 }

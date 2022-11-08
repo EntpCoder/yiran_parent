@@ -1,9 +1,11 @@
 package com.yiran.order.controller;
 
+import com.yiran.client.user.UserClient;
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
-import com.yiran.model.entity.OrderDetails;
 import com.yiran.model.entity.Orders;
+import com.yiran.model.entity.ReceiveAddress;
+import com.yiran.model.vo.OrdersVO;
 import com.yiran.order.service.IOrdersService;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,9 +20,11 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
     private final IOrdersService ordersService;
+    private final UserClient userClient;
 
-    public OrderController(IOrdersService ordersService) {
+    public OrderController(IOrdersService ordersService, UserClient userClient) {
         this.ordersService = ordersService;
+        this.userClient = userClient;
     }
 
     /**
@@ -52,12 +56,45 @@ public class OrderController {
 
     /**
      * 根据订单号获取订单详情
-     *
      * @return 订单详情
      */
     @GetMapping("/getOrderAndDetail/{orderId}")
     public R<Orders> getOrderDetails(@PathVariable("orderId") String orderId) {
         Orders orders = ordersService.getOrderAndDetails(orderId);
         return orders == null ? R.fail(ResultCodeEnum.DATA_EMPTY) : R.ok("order", orders);
+    }
+    /**
+     * 根据用户id来查询用户的全部订单
+     * @param usersId 用户id
+     * @return 订单集合
+     */
+    @GetMapping("/getAllOrders")
+    public R<List<OrdersVO>> getAllOrders(@RequestHeader("userId") String usersId){
+        return R.ok("ordersList", ordersService.getAllOrders(usersId));
+    }
+
+    /**
+     * 根据用户id以及状态编码来查询用户状态订单
+     * @param usersId 用户id
+     * @param orderState 状态编码-订单状态：0未支付 1已支付 2已取消  3待收货 4已完成
+     * @return 状态集合
+     */
+    @GetMapping("/getOrdersByStatus")
+    public R<List<OrdersVO>> getOrdersByStatus(@RequestHeader("userId") String usersId,Byte orderState){
+        return R.ok("QueryStatusList", ordersService.getOrdersByStatus(usersId,orderState));
+    }
+
+    /**
+     * 根据订单id来查询一条订单信息的详情以及物流地址
+     * @param usersId 用户id
+     * @param orserId 订单id
+     * @param receiveId 地址id
+     * @return 返回一条订单的详细信息
+     */
+    @GetMapping("/getOrderDetailsByOrderId")
+    public R<Object> getOrderDetailsByOrderId(@RequestHeader("userId") String usersId,String orserId,String receiveId){
+        OrdersVO orderDetailsByOrderId = ordersService.getOrderDetailsByOrderId(orserId);
+        ReceiveAddress address = userClient.getAddress(receiveId).getData().get("");
+        return R.ok().data("order",orderDetailsByOrderId).data("address",address);
     }
 }

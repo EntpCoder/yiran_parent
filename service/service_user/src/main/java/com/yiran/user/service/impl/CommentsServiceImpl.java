@@ -40,6 +40,7 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
         queryWrapper.eq("pro_id",proId);
         List<Comments> commentsList=commentsMapper.selectList(queryWrapper);
 
+
         for (Comments c:commentsList
              ) {
             CommentVo commentVo=new CommentVo();
@@ -61,6 +62,8 @@ public class CommentsServiceImpl extends ServiceImpl<CommentsMapper, Comments> i
             commentVo.setImage(user.getImage());
             commentVo.setUserId(user.getUserId());
             commentVoList.add(commentVo);
+
+
         }
         return commentVoList;
     }

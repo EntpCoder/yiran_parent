@@ -2,6 +2,9 @@ package com.yiran.order.service;
 
 import com.yiran.model.entity.Orders;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.yiran.model.vo.OrdersVO;
+
+import java.util.List;
 
 /**
  * <p>
@@ -35,4 +38,30 @@ public interface IOrdersService extends IService<Orders> {
      * @return 订单详情
      */
     Orders getOrderAndDetails(String orderId);
+    /**
+     * 根据用户id来查询用户的全部订单
+     * @param usersId 用户id
+     * @return 订单集合
+     */
+    List<OrdersVO> getAllOrders(String usersId);
+    /**
+     * 根据用户id以及状态编码来查询用户状态订单
+     * @param usersId 用户id
+     * @param orderState 状态编码-订单状态：0未支付 1已支付 2已取消  3待收货 4已完成
+     * @return 状态集合
+     */
+    List<OrdersVO> getOrdersByStatus(String usersId, Byte orderState);
+    /**
+     * 根据订单id来查询一条订单的详情
+     * @param orderId 订单id
+     * @return 一条订单的集合
+     */
+    OrdersVO getOrderDetailsByOrderId(String orderId);
+
+    /**
+     * 封装复用方法
+     * @param orders 输入orders类型的参数
+     * @return 返回一个VO集合
+     */
+    List<OrdersVO> getPackagingList(List<Orders> orders);
 }

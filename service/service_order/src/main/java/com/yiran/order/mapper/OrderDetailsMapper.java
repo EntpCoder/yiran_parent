@@ -1,8 +1,12 @@
 package com.yiran.order.mapper;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.yiran.model.entity.OrderDetails;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.yiran.model.entity.Orders;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * <p>
@@ -14,5 +18,4 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface OrderDetailsMapper extends BaseMapper<OrderDetails> {
-
 }

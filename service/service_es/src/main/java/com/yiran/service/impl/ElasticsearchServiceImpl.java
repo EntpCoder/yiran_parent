@@ -49,7 +49,7 @@ public class ElasticsearchServiceImpl implements ElasticsearchService {
                 .withHighlightFields(
                         new HighlightBuilder.Field("proName"))
                 .withHighlightBuilder(new HighlightBuilder()
-                        .preTags("<span style='color:yellow'>")
+                        .preTags("<span style='color:rgb(241,1,128)'>")
                         .postTags("</span>"))
                 .build();
         //查询
