@@ -236,6 +236,22 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         List<Orders> orders = ordersMapper.selectList(ordersQueryWrapper);
         return getPackagingList(orders);
     }
+
+    /**
+     * 根据订单id来查询一条订单的详情
+     * @param orderId 订单id
+     * @return 一条订单的集合
+     */
+    @Override
+    public OrdersVO getOrderDetailsByOrderId(String orderId){
+        QueryWrapper<Orders> ordersQueryWrapper =new QueryWrapper<>();
+        ordersQueryWrapper.eq("order_id",orderId);
+        ordersQueryWrapper.last("order by place_time desc");
+        Orders order = ordersMapper.selectById(orderId);
+        ArrayList<Orders> orders = new ArrayList<>();
+        orders.add(order);
+        return getPackagingList(orders).get(0);
+    }
     /**
      * 封装复用方法
      * @param orders 输入orders类型的参数
