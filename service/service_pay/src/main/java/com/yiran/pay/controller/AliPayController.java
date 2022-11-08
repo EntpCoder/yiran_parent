@@ -47,7 +47,7 @@ public class AliPayController {
     public void callBack2(AlipayVo alipayVo, HttpServletResponse response){
         System.out.println("同步回调"+alipayVo);
         try {
-            response.sendRedirect("http://localhost:5173/memberInfo/orderManagement/allOrders");
+            response.sendRedirect("http://localhost:5173/memberInfo/orderManagement");
         } catch (IOException e) {
             e.printStackTrace();
         }
