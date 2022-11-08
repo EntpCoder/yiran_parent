@@ -1,21 +1,16 @@
 package com.yiran.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yiran.client.cart.CartClient;
 import com.yiran.client.cart.CouponClient;
 import com.yiran.common.result.R;
-import com.yiran.model.entity.Flow;
-import com.yiran.model.entity.Inventory;
-import com.yiran.model.entity.OrderDetails;
-import com.yiran.model.entity.Orders;
+import com.yiran.model.entity.*;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.yiran.model.vo.AlipayVo;
 import com.yiran.model.vo.CartVO;
-import com.yiran.order.mapper.FlowMapper;
-import com.yiran.order.mapper.InventoryMapper;
-import com.yiran.order.mapper.OrderDetailsMapper;
-import com.yiran.order.mapper.OrdersMapper;
+import com.yiran.model.vo.OrderDetailsVo;
+import com.yiran.model.vo.OrdersVO;
+import com.yiran.order.mapper.*;
 import com.yiran.order.service.IOrdersService;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -24,7 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -211,4 +206,62 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             }
         }
     }
+
+    /**
+     * 根据用户id来查询用户的全部订单
+     * @param usersId 用户id
+     * @return 订单集合
+     */
+    @Override
+    public List<OrdersVO> getAllOrders(String usersId){
+        //查询订单
+        QueryWrapper<Orders> ordersQueryWrapper = new QueryWrapper<>();
+        ordersQueryWrapper.eq("users_id",usersId);
+        ordersQueryWrapper.last("order by place_time desc");
+        List<Orders> orders = ordersMapper.selectList(ordersQueryWrapper);
+        return getPackagingList(orders);
+    }
+    /**
+     * 根据用户id以及状态编码来查询用户状态订单
+     * @param usersId 用户id
+     * @param orderState 状态编码-订单状态：0未支付 1已支付 2已取消  3待收货 4已完成
+     * @return 状态集合
+     */
+    @Override
+    public List<OrdersVO> getOrdersByStatus(String usersId, Byte orderState){
+        QueryWrapper<Orders> ordersQueryWrapper =new QueryWrapper<>();
+        ordersQueryWrapper.eq("users_id",usersId);
+        ordersQueryWrapper.eq("order_state",orderState);
+        ordersQueryWrapper.last("order by place_time desc");
+        List<Orders> orders = ordersMapper.selectList(ordersQueryWrapper);
+        return getPackagingList(orders);
+    }
+    /**
+     * 封装复用方法
+     * @param orders 输入orders类型的参数
+     * @return 返回一个VO集合
+     */
+    @Override
+    public List<OrdersVO> getPackagingList(List<Orders> orders){
+        //创建一个空集合
+        List<OrdersVO> ordersList = new ArrayList<>();
+        for (Orders o:
+                orders) {
+            OrdersVO vo = new OrdersVO();
+            BeanUtils.copyProperties(o,vo);
+            QueryWrapper<OrderDetails> orderDetailsQueryWrapper = new QueryWrapper<>();
+            orderDetailsQueryWrapper.eq("order_id",o.getOrderId());
+            List<OrderDetails> orderDetails = orderDetailsMapper.selectList(orderDetailsQueryWrapper);
+            List<OrderDetailsVo> orderDetailsVoList = new ArrayList<>();
+            for(OrderDetails od:orderDetails){
+                OrderDetailsVo detailsVo = new OrderDetailsVo();
+                BeanUtils.copyProperties(od,detailsVo);
+                orderDetailsVoList.add(detailsVo);
+            }
+            vo.setOrderDetails(orderDetailsVoList);
+            ordersList.add(vo);
+        }
+      return ordersList;
+    }
+
 }
