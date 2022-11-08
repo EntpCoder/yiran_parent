@@ -1,8 +1,10 @@
 package com.yiran.order.controller;
 
+import com.yiran.client.user.UserClient;
 import com.yiran.common.result.R;
 import com.yiran.common.result.ResultCodeEnum;
 import com.yiran.model.entity.Orders;
+import com.yiran.model.entity.ReceiveAddress;
 import com.yiran.model.vo.OrdersVO;
 import com.yiran.order.service.IOrdersService;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +20,11 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
     private final IOrdersService ordersService;
+    private final UserClient userClient;
 
-    public OrderController(IOrdersService ordersService) {
+    public OrderController(IOrdersService ordersService, UserClient userClient) {
         this.ordersService = ordersService;
+        this.userClient = userClient;
     }
 
     /**
@@ -78,5 +82,19 @@ public class OrderController {
     @GetMapping("/getOrdersByStatus")
     public R<List<OrdersVO>> getOrdersByStatus(@RequestHeader("userId") String usersId,Byte orderState){
         return R.ok("QueryStatusList", ordersService.getOrdersByStatus(usersId,orderState));
+    }
+
+    /**
+     * 根据订单id来查询一条订单信息的详情以及物流地址
+     * @param usersId 用户id
+     * @param orserId 订单id
+     * @param receiveId 地址id
+     * @return 返回一条订单的详细信息
+     */
+    @GetMapping("/getOrderDetailsByOrderId")
+    public R<Object> getOrderDetailsByOrderId(@RequestHeader("userId") String usersId,String orserId,String receiveId){
+        OrdersVO orderDetailsByOrderId = ordersService.getOrderDetailsByOrderId(orserId);
+        ReceiveAddress address = userClient.getAddress(receiveId).getData().get("");
+        return R.ok().data("order",orderDetailsByOrderId).data("address",address);
     }
 }

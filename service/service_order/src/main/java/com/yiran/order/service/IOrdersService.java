@@ -51,6 +51,12 @@ public interface IOrdersService extends IService<Orders> {
      * @return 状态集合
      */
     List<OrdersVO> getOrdersByStatus(String usersId, Byte orderState);
+    /**
+     * 根据订单id来查询一条订单的详情
+     * @param orderId 订单id
+     * @return 一条订单的集合
+     */
+    OrdersVO getOrderDetailsByOrderId(String orderId);
 
     /**
      * 封装复用方法
