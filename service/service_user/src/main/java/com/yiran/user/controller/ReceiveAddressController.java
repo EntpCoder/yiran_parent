@@ -70,6 +70,6 @@ public class ReceiveAddressController{
     @GetMapping("/getUserAddress")
     public R<List<ReceiveAddress>> getUserAddress(@RequestHeader("userId") String userId){
         List<ReceiveAddress> receiveAddresses=receiveAddressService.getAddressByUserId(userId);
-        return receiveAddresses==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok",receiveAddresses);
+        return receiveAddresses==null?R.fail(ResultCodeEnum.FAIL):R.ok("userAddressList",receiveAddresses);
     }
 }

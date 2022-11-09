@@ -24,6 +24,14 @@ public class OrdersVO implements Serializable {
      */
     private String numbers;
     /**
+     * 优惠金额
+     */
+    private BigDecimal discountAmount;
+    /**
+     * 订单金额
+     */
+    private BigDecimal orderAmount;
+    /**
      * 下单时间
      */
     private LocalDateTime placeTime;
