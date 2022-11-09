@@ -59,6 +59,13 @@ public interface IOrdersService extends IService<Orders> {
     OrdersVO getOrderDetailsByOrderId(String orderId);
 
     /**
+     *根据订单id改收获状态
+     * @param orderId 订单id
+     * @return Boolean
+     */
+    Boolean updateOrderStatusByOrderId(String orderId);
+
+    /**
      * 封装复用方法
      * @param orders 输入orders类型的参数
      * @return 返回一个VO集合

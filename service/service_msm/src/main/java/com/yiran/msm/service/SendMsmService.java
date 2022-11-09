@@ -10,7 +10,7 @@ public interface SendMsmService {
     /**
      * 发送短信的接口
      * @param phoneNum 手机号
-     * @return
+     * @return 验证码是否成功
      */
     Boolean sendMsm(String phoneNum);
 

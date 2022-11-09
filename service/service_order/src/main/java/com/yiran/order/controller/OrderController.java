@@ -97,4 +97,14 @@ public class OrderController {
         ReceiveAddress address = userClient.getAddress(usersId,orderDetailsByOrderId.getReceiveId()).getData().get("ok");
         return R.build().data("order", orderDetailsByOrderId).data("address", address);
     }
+
+    /**
+     *根据订单id改收获状态
+     * @param orderId 订单id
+     * @return Boolean
+     */
+    @GetMapping("/updateOrderStatusByOrderId")
+    public R<Boolean> updateOrderStatusByOrderId(String orderId){
+        return R.ok("orderState",ordersService.updateOrderStatusByOrderId(orderId));
+    }
 }
