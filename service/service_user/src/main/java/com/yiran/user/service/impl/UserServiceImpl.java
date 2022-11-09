@@ -2,11 +2,12 @@ package com.yiran.user.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.yiran.client.msm.MsmClient;
+import com.yiran.common.result.R;
 import com.yiran.model.entity.User;
 import com.yiran.user.mapper.UserMapper;
 import com.yiran.user.service.IUserService;
 import org.springframework.stereotype.Service;
-
 
 /**
  * 方法类
@@ -15,14 +16,17 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUserService {
     private final UserMapper userMapper;
+    private final MsmClient msmClient;
+    public UserServiceImpl(UserMapper userMapper, MsmClient msmClient) {
+        this.userMapper = userMapper;
+        this.msmClient = msmClient;
+    }
 
     /**
      * 构造器注入，不用@Autoweir
-     * @param userMapper Users类的方法
+     * @param  userName 用户名字
      */
-    public UserServiceImpl(UserMapper userMapper){
-        this.userMapper=userMapper;
-    }
+
     @Override
     public User login(String userName, String password) {
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
@@ -72,5 +76,25 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
     @Override
     public User selectUser(String userId) {
         return userMapper.selectById(userId);
+    }
+
+    /**
+     * 点击注册，验证验证码是否一致是否过期，并将手机号码和密码存到数据库里面
+     * @param phoneNum 用户手机号码
+     * @param password 用户密码
+     * @param message 验证码
+     * @return boolean
+     */
+    @Override
+    public boolean register(String phoneNum, String password, String message) {
+        User user = new User();
+        user.setPassword(password);
+        user.setPhone(phoneNum);
+        R<Boolean> response = msmClient.getMsg(phoneNum, message);
+        int insert = 0;
+        if(response.getCode() == 200){
+           insert = userMapper.insert(user);
+        }
+        return insert > 0;
     }
 }

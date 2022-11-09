@@ -14,3 +14,13 @@ spring:
         shared-configs:
           - data-id: cloud.yml
             group: COMMON_GROUP
+          - data-id: redis.yml
+            group: COMMON_GROUP
+aliyun:
+  accessKeyID: LTAI5tFnzMfeoTVHyzH1TMbx
+  accessKeySecret: uvADG11dN8VL3QJpnvbT1Lkheo00rf
+  domain: dysmsapi.aliyuncs.com
+  regionId: cn-hangzhou
+  templateCode: SMS_154950909
+  signName: 阿里云短信测试
+

@@ -41,4 +41,13 @@ public interface IUserService extends IService<User> {
      */
     User selectUser(String userId);
 
+    /**
+     * 点击注册，验证验证码是否一致是否过期，并将手机号码和密码存到数据库里面
+     * @param phoneNum 用户手机号码
+     * @param password 用户密码
+     * @param message 验证码
+     * @return boolean
+     */
+    boolean register(String phoneNum,String password,String message);
+
 }

@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ComponentScan(basePackages = "com.yiran")
-@EnableFeignClients(basePackages = "com.yiran.user")
+@EnableFeignClients(basePackages = "com.yiran")
 public class UserConfig {
 
 }

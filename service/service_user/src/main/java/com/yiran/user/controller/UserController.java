@@ -18,7 +18,6 @@ import javax.websocket.server.PathParam;
 @RequestMapping("/user")
 public class UserController {
     private final IUserService userService;
-
     /**
      * 使用构造器注入
      * @param userService 服务类的方法
@@ -51,5 +50,10 @@ public class UserController {
     @GetMapping("/user")
     public R<User> getUser(@PathParam("userId") String userId){
         return R.ok("get userMessage",userService.selectUser(userId));
+    }
+    @GetMapping("/register")
+    public R<Boolean> register(@RequestParam("phoneNum")String phoneNum,@RequestParam("password")String password,@RequestParam("message")String message){
+        boolean b = userService.register(phoneNum, password, message);
+        return b ? R.ok("result",true):R.fail();
     }
 }
