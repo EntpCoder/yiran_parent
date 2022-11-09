@@ -108,11 +108,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
         User user = new User();
         user.setPassword(password);
         user.setPhone(phoneNum);
-        R<Boolean> response = msmClient.getMsg(phoneNum, message);
-        int insert = 0;
-        if(response.getCode() == 200){
-           insert = userMapper.insert(user);
+        //查看数据库里该手机号是否被注册
+        QueryWrapper<User> wrapper = new QueryWrapper<>();
+        wrapper.eq("phone",phoneNum);
+        User userAlready = userMapper.selectOne(wrapper);
+        if(userAlready == null){
+            R<Boolean> response = msmClient.getMsg(phoneNum, message);
+            int insert = 0;
+            if(response.getCode() == 200){
+                insert = userMapper.insert(user);
+            }
+            return insert > 0;
         }
-        return insert > 0;
+       return false;
     }
 }
