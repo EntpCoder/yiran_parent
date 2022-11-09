@@ -94,7 +94,7 @@ public class OrderController {
     @GetMapping("/getOrderDetailsByOrderId")
     public R<Object> getOrderDetailsByOrderId(@RequestHeader("userId") String usersId,String orserId,String receiveId){
         OrdersVO orderDetailsByOrderId = ordersService.getOrderDetailsByOrderId(orserId);
-        ReceiveAddress address = userClient.getAddress(receiveId).getData().get("");
+        ReceiveAddress address = userClient.getAddress(receiveId).getData().get("ok");
         return R.ok().data("order",orderDetailsByOrderId).data("address",address);
     }
 }
