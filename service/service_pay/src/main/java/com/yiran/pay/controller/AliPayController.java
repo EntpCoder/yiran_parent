@@ -1,6 +1,7 @@
 package com.yiran.pay.controller;
 
 import com.yiran.model.vo.AlipayVo;
+import com.yiran.pay.config.AlipayProperties;
 import com.yiran.pay.service.IAlipayService;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,10 @@ import java.io.IOException;
 @RequestMapping("/pay")
 public class AliPayController {
     private final IAlipayService alipayService;
-    public AliPayController(IAlipayService iAlipayService){
+    private final AlipayProperties alipayProperties;
+    public AliPayController(IAlipayService iAlipayService,AlipayProperties alipayProperties){
         this.alipayService = iAlipayService;
+        this.alipayProperties = alipayProperties;
     }
     /**
      * 根据订单id 拉起支付页面
@@ -47,7 +50,7 @@ public class AliPayController {
     public void callBack2(AlipayVo alipayVo, HttpServletResponse response){
         System.out.println("同步回调"+alipayVo);
         try {
-            response.sendRedirect("http://localhost:5173/memberInfo/orderManagement");
+            response.sendRedirect(alipayProperties.getRedirectUrl());
         } catch (IOException e) {
             e.printStackTrace();
         }

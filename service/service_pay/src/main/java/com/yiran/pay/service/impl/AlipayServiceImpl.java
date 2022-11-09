@@ -26,11 +26,13 @@ public class AlipayServiceImpl implements IAlipayService {
     private final DefaultAlipayClient client;
     private final OrderClient orderClient;
     private final RabbitTemplate rabbitTemplate;
+    private final AlipayProperties alipayProperties;
 
-    public AlipayServiceImpl(DefaultAlipayClient client, OrderClient orderClient,RabbitTemplate rabbitTemplate) {
+    public AlipayServiceImpl(DefaultAlipayClient client, OrderClient orderClient,RabbitTemplate rabbitTemplate,AlipayProperties alipayProperties) {
         this.client = client;
         this.orderClient = orderClient;
         this.rabbitTemplate = rabbitTemplate;
+        this.alipayProperties = alipayProperties;
     }
 
     @Override
@@ -41,8 +43,8 @@ public class AlipayServiceImpl implements IAlipayService {
         String timeExpire = order.getCreateTime().plusMinutes(2).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         // 调用alipay.trade.page.pay接口 发起支付请求
         AlipayTradePagePayRequest request = new AlipayTradePagePayRequest();
-        request.setReturnUrl(AlipayProperties.RETURN_URL);
-        request.setNotifyUrl(AlipayProperties.NOTIFY_URL);
+        request.setReturnUrl(alipayProperties.getReturnUrl());
+        request.setNotifyUrl(alipayProperties.getNotifyUrl());
         JSONObject bizContent = new JSONObject();
         // 必选四项参数 --其他参数参考官方文档
         bizContent.put("out_trade_no", order.getOrderId());
@@ -83,7 +85,7 @@ public class AlipayServiceImpl implements IAlipayService {
         boolean signVerified = false;
         try {
             // 使用支付宝SDK验签
-            signVerified = AlipaySignature.verifyV1(params, AlipayProperties.ALIPAY_PUBLIC_KEY, AlipayProperties.CHARSET, AlipayProperties.SIGN_TYPE);
+            signVerified = AlipaySignature.verifyV1(params, alipayProperties.getAlipayPublicKey(), alipayProperties.getCharset(), alipayProperties.getSignType());
         } catch (AlipayApiException e) {
             e.printStackTrace();
         }
