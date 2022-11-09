@@ -157,7 +157,7 @@ public class CouponServiceImpl implements CouponService {
                     receiveCouponMapper.insert(receiveCoupon);
                     //发送延时队列
                     rabbitTemplate.convertAndSend("yiran.delayed.exchange","coupon.failure",receiveCoupon.getReceiveId(),message -> {
-                        message.getMessageProperties().setDelay(coupon.getTimelimit());
+                        message.getMessageProperties().setDelay(coupon.getTimelimit()*1000);
                         return message;
                     });
                 }
