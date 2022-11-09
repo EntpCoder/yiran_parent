@@ -71,4 +71,11 @@ public interface IOrdersService extends IService<Orders> {
      * @return 返回一个VO集合
      */
     List<OrdersVO> getPackagingList(List<Orders> orders);
+
+    /**
+     * 测试接口，用于用户支付订单后 修改状态为已发货(待收货)
+     * @param orderNum 订单编号(不是订单id！！！)
+     * @return 是否成功
+     */
+    Boolean updateOrderStatusByOrderNumWith3(String orderNum);
 }

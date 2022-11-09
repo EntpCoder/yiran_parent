@@ -99,12 +99,23 @@ public class OrderController {
     }
 
     /**
-     *根据订单id改收获状态
+     *根据订单id改为收获状态
      * @param orderId 订单id
      * @return Boolean
      */
-    @GetMapping("/updateOrderStatusByOrderId")
-    public R<Boolean> updateOrderStatusByOrderId(String orderId){
+    @GetMapping("/updateOrderStatusByOrderId/{orderId}")
+    public R<Boolean> updateOrderStatusByOrderId(@PathVariable("orderId") String orderId){
         return R.ok("orderState",ordersService.updateOrderStatusByOrderId(orderId));
+    }
+
+    /**
+     * 根据用户订单编号(不是订单id！！！！) 发货
+     * @param orderNum 订单编号
+     * @return 是否成功
+     */
+    @GetMapping("/deliverGoodsByOrderNum/{orderNum}")
+    public R<Boolean> deliverGoodsByOrderNum(@PathVariable("orderNum") String orderNum){
+        Boolean isOk = ordersService.updateOrderStatusByOrderNumWith3(orderNum);
+        return isOk?R.ok("isOk",true):R.fail(ResultCodeEnum.FAIL);
     }
 }

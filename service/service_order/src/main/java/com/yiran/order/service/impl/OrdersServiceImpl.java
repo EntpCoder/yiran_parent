@@ -1,6 +1,7 @@
 package com.yiran.order.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.yiran.client.cart.CartClient;
 import com.yiran.client.cart.CouponClient;
 import com.yiran.common.result.R;
@@ -292,6 +293,15 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
             ordersList.add(vo);
         }
       return ordersList;
+    }
+
+    @Override
+    public Boolean updateOrderStatusByOrderNumWith3(String orderNum) {
+        UpdateWrapper<Orders> ordersUpdateWrapper = new UpdateWrapper<>();
+        ordersUpdateWrapper.eq("numbers",orderNum);
+        Orders orders = new Orders();
+        orders.setOrderState(new Byte("3"));
+        return ordersMapper.update(orders,ordersUpdateWrapper) > 0;
     }
 
 }

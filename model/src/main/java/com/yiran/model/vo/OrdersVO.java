@@ -36,6 +36,10 @@ public class OrdersVO implements Serializable {
      */
     private LocalDateTime placeTime;
     /**
+     * 商品数量
+     */
+    private Integer proNum;
+    /**
      * 订单状态：1未支付2已支付3已取消4待发货5待收货6已完成
      */
     private Byte orderState;
