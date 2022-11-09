@@ -6,10 +6,6 @@ import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.yiran.model.entity.User;
-import sun.security.rsa.RSAPublicKeyImpl;
-
-import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -52,12 +48,12 @@ public class JwtUtil {
         }
     }
 
-    public static void main(String[] args) {
-        User user = new User();
-        user.setUserId("song");
-        user.setUsername("sf");
-        user.setImage("123213");
-        String sign = sign(user);
-        System.out.println(sign);
-    }
+//    public static void main(String[] args) {
+//        User user = new User();
+//        user.setUserId("song");
+//        user.setUsername("sf");
+//        user.setImage("123213");
+//        String sign = sign(user);
+//        System.out.println(sign);
+//    }
 }
