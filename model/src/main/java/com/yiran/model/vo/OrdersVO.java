@@ -36,6 +36,10 @@ public class OrdersVO implements Serializable {
      */
     private String usersId;
     /**
+     * 收货地址id
+     */
+    private String receiveId;
+    /**
      * 订单详情信息
      */
     private List<OrderDetailsVo> orderDetails;

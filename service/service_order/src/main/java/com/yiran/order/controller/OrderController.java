@@ -87,14 +87,14 @@ public class OrderController {
     /**
      * 根据订单id来查询一条订单信息的详情以及物流地址
      * @param usersId 用户id
-     * @param orserId 订单id
-     * @param receiveId 地址id
+     * @param ordersId 订单id
      * @return 返回一条订单的详细信息
      */
-    @GetMapping("/getOrderDetailsByOrderId")
-    public R<Object> getOrderDetailsByOrderId(@RequestHeader("userId") String usersId,String orserId,String receiveId){
-        OrdersVO orderDetailsByOrderId = ordersService.getOrderDetailsByOrderId(orserId);
-        ReceiveAddress address = userClient.getAddress(usersId,receiveId).getData().get("ok");
+    @GetMapping("/getOrderDetailsByOrderId/{ordersId}")
+    public R<Object> getOrderDetailsByOrderId(@RequestHeader("userId") String usersId,
+                                              @PathVariable("ordersId") String ordersId){
+        OrdersVO orderDetailsByOrderId = ordersService.getOrderDetailsByOrderId(ordersId);
+        ReceiveAddress address = userClient.getAddress(usersId,orderDetailsByOrderId.getReceiveId()).getData().get("ok");
         return R.build().data("order", orderDetailsByOrderId).data("address", address);
     }
 }
