@@ -252,6 +252,20 @@ public class OrdersServiceImpl extends ServiceImpl<OrdersMapper, Orders> impleme
         orders.add(order);
         return getPackagingList(orders).get(0);
     }
+
+    /**
+     *根据订单id改收获状态
+     * @param orderId 订单id
+     * @return Boolean
+     */
+    @Override
+    public Boolean updateOrderStatusByOrderId(String orderId){
+        //先根据id查出来
+        Orders orders = ordersMapper.selectById(orderId);
+        orders.setOrderState((byte) 4);
+        ordersMapper.updateById(orders);
+        return false;
+    }
     /**
      * 封装复用方法
      * @param orders 输入orders类型的参数

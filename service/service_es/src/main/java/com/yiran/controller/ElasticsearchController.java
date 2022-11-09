@@ -38,7 +38,8 @@ public class ElasticsearchController {
     @GetMapping("refreshDataService")
     public R<String> refreshData(){
         List<Product> allBy = elasticsearchService.getAllBy();
-        Iterable<Product> productIterable = refreshDataService.saveAll(allBy);
+        refreshDataService.saveAll(allBy);
+        System.out.println("================");
         return R.ok();
     }
 }
