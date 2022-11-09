@@ -240,8 +240,10 @@ public class CouponServiceImpl implements CouponService {
     public void failureCoupon(String receiveId){
         System.out.println("失效优惠券id"+receiveId);
         ReceiveCoupon receiveCoupon = receiveCouponMapper.selectById(receiveId);
-        receiveCoupon.setStatus((byte) 2);
-        receiveCouponMapper.updateById(receiveCoupon);
+        if (receiveCoupon.getStatus() == (byte) 0){
+            receiveCoupon.setStatus((byte) 2);
+            receiveCouponMapper.updateById(receiveCoupon);
+        }
     }
 
 
