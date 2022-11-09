@@ -29,10 +29,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
 
     @Override
     public User login(String userName, String password) {
-        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("username",userName);
-        queryWrapper.eq("password",password);
-        return userMapper.selectOne(queryWrapper);
+        // 账户登录
+        QueryWrapper<User> queryWrapperAccount = new QueryWrapper<>();
+        queryWrapperAccount.eq("username",userName);
+        queryWrapperAccount.eq("password",password);
+        User userAccount = userMapper.selectOne(queryWrapperAccount);
+        // 手机号登录
+        QueryWrapper<User> queryWrapperPhone = new QueryWrapper<>();
+        queryWrapperPhone.eq("phone",userName);
+        queryWrapperPhone.eq("password",password);
+        User userPhone = userMapper.selectOne(queryWrapperPhone);
+        return userAccount == null ? userPhone : userAccount;
     }
 
     /**

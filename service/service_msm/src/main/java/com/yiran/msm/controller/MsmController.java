@@ -30,6 +30,6 @@ public class MsmController {
     @GetMapping("/getMsg")
     public  R<Boolean> getMsg(@RequestParam("phoneNum") String phoneNum,@RequestParam("code") String code){
         Boolean getMsg = sendMsmService.getMsg(phoneNum, code);
-        return getMsg ? R.ok("result",true) : R.fail();
+        return getMsg ? R.ok("result", true) : R.fail();
     }
 }
