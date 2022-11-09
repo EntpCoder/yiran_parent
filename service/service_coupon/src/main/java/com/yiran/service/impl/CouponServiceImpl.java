@@ -110,6 +110,11 @@ public class CouponServiceImpl implements CouponService {
         //加载所有有效的优惠券
         LocalDateTime currentTime = LocalDateTime.now();
         List<Coupon> couponList = couponMapper.selectList(new QueryWrapper<Coupon>().le("grant_start_time",currentTime).ge("grand_end_time",currentTime));
+        for (Coupon c:
+                couponList) {
+            String key = "couponId"+c.getCouponId();
+            redisTemplate.opsForValue().set(key,c,24, TimeUnit.HOURS);
+        }
         return couponList;
     }
 
@@ -132,10 +137,10 @@ public class CouponServiceImpl implements CouponService {
         if (isLock){
             coupon = (Coupon) redisTemplate.opsForValue().get("couponId"+couponId);
             if (coupon == null){
-                return null;
+                return receiveCoupon;
             }
             if (coupon.getQuota().equals(coupon.getReceivedNums())){
-                return null;
+                return receiveCoupon;
             }else {
                 //优惠券已领取数量+1
                 coupon.setReceivedNums(coupon.getReceivedNums()+1);
@@ -174,7 +179,7 @@ public class CouponServiceImpl implements CouponService {
                     getReceiveCoupon(couponId,userId);
                     return receiveCoupon;
                 }else {
-                    return null;
+                    return receiveCoupon;
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
