@@ -27,9 +27,10 @@ public class ReceiveAddressController{
      * 根据地址id查找地址
      * @return R
      */
-    @RequestMapping("/getAddress")
-    public R<ReceiveAddress> getAddress(@PathParam("addressId") String addressId){
-        ReceiveAddress receiveAddress=receiveAddressService.selectAddress(addressId);
+    @GetMapping("/getAddress")
+    public R<ReceiveAddress> getAddress(@RequestHeader("userId") String userId,
+                                        @RequestParam("addressId") String addressId){
+        ReceiveAddress receiveAddress=receiveAddressService.selectAddress(userId,addressId);
         return receiveAddress==null?R.fail(ResultCodeEnum.FAIL):R.ok("ok",receiveAddress);
     }
 

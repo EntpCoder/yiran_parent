@@ -31,8 +31,11 @@ public class ReceiveAddressServiceImpl extends ServiceImpl<ReceiveAddressMapper,
     }
 
     @Override
-    public ReceiveAddress selectAddress(String addressId) {
-        return receiveAddressMapper.selectById(addressId);
+    public ReceiveAddress selectAddress(String userId,String addressId) {
+        QueryWrapper<ReceiveAddress> receiveAddressQueryWrapper = new QueryWrapper<>();
+        receiveAddressQueryWrapper.eq("receive_id",addressId);
+        receiveAddressQueryWrapper.eq("user_id",userId);
+        return receiveAddressMapper.selectOne(receiveAddressQueryWrapper);
     }
 
     @Override
