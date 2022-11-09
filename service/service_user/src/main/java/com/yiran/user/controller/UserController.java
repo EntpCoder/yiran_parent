@@ -31,6 +31,11 @@ public class UserController {
         User user = userService.login(userName,password);
         return user == null ? R.fail(ResultCodeEnum.LOGIN_FAIL) : R.ok("token",JwtUtil.sign(user));
     }
+    @PostMapping("/phoneLogin")
+    public R<String> phoneLogin(String phoneNum){
+        User user = userService.phoneLogin(phoneNum);
+        return user == null ? R.fail(ResultCodeEnum.LOGIN_FAIL) : R.ok("token",JwtUtil.sign(user));
+    }
 
     @PostMapping("/redister")
     public R<Boolean> redister(User user){

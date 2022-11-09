@@ -41,6 +41,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper,User> implements IUs
         User userPhone = userMapper.selectOne(queryWrapperPhone);
         return userAccount == null ? userPhone : userAccount;
     }
+    /**
+     * 用户登录发放token
+     * @param phoneNum 手机号码
+     * @return token
+     */
+    @Override
+    public User phoneLogin(String phoneNum) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("phone",phoneNum);
+        return userMapper.selectOne(queryWrapper);
+    }
 
     /**
      * 新增用户，用于用户注册

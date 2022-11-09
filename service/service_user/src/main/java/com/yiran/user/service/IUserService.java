@@ -13,6 +13,13 @@ public interface IUserService extends IService<User> {
      * @return token
      */
     User login(String userName,String password);
+
+    /**
+     * 用户登录发放token
+     * @param phoneNum 手机号码
+     * @return token
+     */
+    User phoneLogin(String phoneNum);
     /**
      * 新增用户
      * @param user 用户实例
